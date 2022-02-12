@@ -1,0 +1,10 @@
+.button{
+    border: none;
+    cursor: pointer;
+    box-shadow: var(--shadow-xs);
+    border-radius: var(--border-radius-sm);
+
+    &:active{
+        box-shadow: inset var(--shadow-sm);
+    }
+}

@@ -1,0 +1,44 @@
+// .nav {
+//   font-size: 2rem;
+//   background: var(--color-primary-dark);
+//   position: fixed;
+//   inset: 0 0 auto 0;
+//   z-index: 500;
+//   box-shadow: var(--shadow-sm);
+//   @include flexCenter;
+
+//   @include respond(phone) {
+//     & {
+//       grid-template-columns: 1rem 1fr 1rem;
+//       padding-left: 1rem;
+//     }
+//   }
+
+//   &__container {
+//     display: flex;
+//     flex: 1; // using along with margin to spread
+//     align-items: center;
+//     max-width: var(--max-bg-width);
+//   }
+
+//   &__item {
+//     position: relative;
+//     padding: 1.4rem;
+//     cursor: pointer;
+//     overflow: hidden;
+//     text-decoration: none;
+//     user-select: none;
+//   }
+
+//   &__link {
+//   }
+// }
+
+// .logo {
+//   margin-right: auto;
+//   &__icon {
+//     height: 4rem;
+//     width: 6rem;
+//     fill: var(--color-grey-light-2);
+//   }
+// }
