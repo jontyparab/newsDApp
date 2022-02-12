@@ -1,36 +1,36 @@
 // Load fonts
 @mixin fontLoad($font-family, $font-file, $font-weights...) {
-    @each $font-weight in $font-weights {
-        @font-face {
-            font-family: $font-family;
-            font-style: normal;
-            font-weight: $font-weight;
-            font-display: swap;
-            src: local($font-family), url($font-file+$font-weight+'.woff2') format('woff2');
-        }
+  @each $font-weight in $font-weights {
+    @font-face {
+      font-family: $font-family;
+      font-style: normal;
+      font-weight: $font-weight;
+      font-display: swap;
+      src: local($font-family),
+        url($font-file + $font-weight + ".woff2") format("woff2");
     }
+  }
 }
 
 @mixin absCenter {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 @mixin flexCenter {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 @mixin textGradient($direction, $color1, $color2) {
-    background: linear-gradient($direction, $color1, $color2);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+  background: linear-gradient($direction, $color1, $color2);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
-
 
 // MEDIA QUERY MANAGER
 /*
@@ -51,17 +51,24 @@ ORDER: Base + typography > general layout + grid > page layout > components
 1em = 16px
 */
 @mixin respond($breakpoint) {
-    @if $breakpoint == phone {
-        @media only screen and (max-width: 37.5em) { @content };    //600px
-    }
-    @if $breakpoint == tab-port {
-        @media only screen and (max-width: 56.25em) { @content };     //900px
-    }
-    @if $breakpoint == tab-land {
-        @media only screen and (max-width: 75em) { @content };    //1200px
-    }
-    @if $breakpoint == big-desktop {
-        @media only screen and (min-width: 112.5em) { @content };    //1800
-    }
+  @if $breakpoint == phone {
+    @media only screen and (max-width: 37.5em) {
+      @content;
+    } //600px
+  }
+  @if $breakpoint == tab-port {
+    @media only screen and (max-width: 56.25em) {
+      @content;
+    } //900px
+  }
+  @if $breakpoint == tab-land {
+    @media only screen and (max-width: 75em) {
+      @content;
+    } //1200px
+  }
+  @if $breakpoint == big-desktop {
+    @media only screen and (min-width: 112.5em) {
+      @content;
+    } //1800
+  }
 }
-

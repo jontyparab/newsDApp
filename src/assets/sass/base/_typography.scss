@@ -1,19 +1,32 @@
 // Fonts
 @include fontLoad(
-    'Poppins', 
-    '../fonts/Poppins/poppins-v19-latin-', 
-    100, 200, 300, 400, 500, 600, 700, 800, 900);
-    
+  "Poppins",
+  "../fonts/Poppins/poppins-v19-latin-",
+  100,
+  200,
+  300,
+  400,
+  500,
+  600,
+  700,
+  800,
+  900
+);
+
 body {
-    font-family: 'Poppins', serif;
-    font-weight: 400;
-    line-height: 1.5;
+  font-family: "Poppins", serif;
+  font-weight: 400;
+  line-height: 1.5;
 }
 
-.secondary-heading{
-    font-weight: 300;
-    font-size: 5.5rem;
-    letter-spacing: -.3rem;
-    @include textGradient(to top, var(--color-tertiary-light), var(--color-tertiary-dark));
-    text-shadow: var(--shadow-sm);
+.secondary-heading {
+  font-weight: 300;
+  font-size: 5.5rem;
+  letter-spacing: -0.3rem;
+  @include textGradient(
+    to top,
+    var(--color-tertiary-light),
+    var(--color-tertiary-dark)
+  );
+  text-shadow: var(--shadow-sm);
 }

@@ -1,84 +1,224 @@
-.mt-xs{margin-top: 1rem;}
-.mt-sm{margin-top: 2rem;}
-.mt-md{margin-top: 5rem;}
-.mt-lg{margin-top: 10rem;}
-.mt-hg{margin-top: 15rem;}
+.mt-xs {
+  margin-top: 1rem;
+}
+.mt-sm {
+  margin-top: 2rem;
+}
+.mt-md {
+  margin-top: 5rem;
+}
+.mt-lg {
+  margin-top: 10rem;
+}
+.mt-hg {
+  margin-top: 15rem;
+}
 
-.mb-xs{margin-bottom: 1rem;}
-.mb-sm{margin-bottom: 2rem;}
-.mb-md{margin-bottom: 5rem;}
-.mb-lg{margin-bottom: 10rem;}
-.mb-hg{margin-bottom: 15rem;}
+.mb-xs {
+  margin-bottom: 1rem;
+}
+.mb-sm {
+  margin-bottom: 2rem;
+}
+.mb-md {
+  margin-bottom: 5rem;
+}
+.mb-lg {
+  margin-bottom: 10rem;
+}
+.mb-hg {
+  margin-bottom: 15rem;
+}
 
-.ms-xs{margin-left: 1rem;}
-.ms-sm{margin-left: 2rem;}
-.ms-md{margin-left: 5rem;}
-.ms-lg{margin-left: 10rem;}
-.ms-hg{margin-left: 15rem;}
+.ms-xs {
+  margin-left: 1rem;
+}
+.ms-sm {
+  margin-left: 2rem;
+}
+.ms-md {
+  margin-left: 5rem;
+}
+.ms-lg {
+  margin-left: 10rem;
+}
+.ms-hg {
+  margin-left: 15rem;
+}
 
-.me-xs{margin-right: 1rem;}
-.me-sm{margin-right: 2rem;}
-.me-md{margin-right: 5rem;}
-.me-lg{margin-right: 10rem;}
-.me-hg{margin-right: 15rem;}
+.me-xs {
+  margin-right: 1rem;
+}
+.me-sm {
+  margin-right: 2rem;
+}
+.me-md {
+  margin-right: 5rem;
+}
+.me-lg {
+  margin-right: 10rem;
+}
+.me-hg {
+  margin-right: 15rem;
+}
 
-.mx-xs{margin: 0 1rem;}
-.mx-sm{margin: 0 2rem;}
-.mx-md{margin: 0 5rem;}
-.mx-lg{margin: 0 10rem;}
-.mx-hg{margin: 0 15rem;}
+.mx-xs {
+  margin: 0 1rem;
+}
+.mx-sm {
+  margin: 0 2rem;
+}
+.mx-md {
+  margin: 0 5rem;
+}
+.mx-lg {
+  margin: 0 10rem;
+}
+.mx-hg {
+  margin: 0 15rem;
+}
 
-.my-xs{margin: 1rem 0;}
-.my-sm{margin: 2rem 0;}
-.my-md{margin: 5rem 0;}
-.my-lg{margin: 10rem 0;}
-.my-hg{margin: 15rem 0;}
+.my-xs {
+  margin: 1rem 0;
+}
+.my-sm {
+  margin: 2rem 0;
+}
+.my-md {
+  margin: 5rem 0;
+}
+.my-lg {
+  margin: 10rem 0;
+}
+.my-hg {
+  margin: 15rem 0;
+}
 
-.m-auto{margin: auto auto}
-.ms-auto{margin-left: auto}
-.me-auto{margin-right: auto}
-.mx-auto{margin: 0 auto}
-.my-auto{margin: auto 0}
+.m-auto {
+  margin: auto auto;
+}
+.ms-auto {
+  margin-left: auto;
+}
+.me-auto {
+  margin-right: auto;
+}
+.mx-auto {
+  margin: 0 auto;
+}
+.my-auto {
+  margin: auto 0;
+}
 
 // Paddings
-.p-xs{padding: 1rem;}
-.p-sm{padding: 2rem;}
-.p-md{padding: 5rem;}
-.p-lg{padding: 10rem;}
-.p-hg{padding: 15rem;}
+.p-xs {
+  padding: 1rem;
+}
+.p-sm {
+  padding: 2rem;
+}
+.p-md {
+  padding: 5rem;
+}
+.p-lg {
+  padding: 10rem;
+}
+.p-hg {
+  padding: 15rem;
+}
 
-.pt-xs{padding-top: 1rem;}
-.pt-sm{padding-top: 2rem;}
-.pt-md{padding-top: 5rem;}
-.pt-lg{padding-top: 10rem;}
-.pt-hg{padding-top: 15rem;}
+.pt-xs {
+  padding-top: 1rem;
+}
+.pt-sm {
+  padding-top: 2rem;
+}
+.pt-md {
+  padding-top: 5rem;
+}
+.pt-lg {
+  padding-top: 10rem;
+}
+.pt-hg {
+  padding-top: 15rem;
+}
 
-.pb-xs{padding-bottom: 1rem;}
-.pb-sm{padding-bottom: 2rem;}
-.pb-md{padding-bottom: 5rem;}
-.pb-lg{padding-bottom: 10rem;}
-.pb-hg{padding-bottom: 15rem;}
+.pb-xs {
+  padding-bottom: 1rem;
+}
+.pb-sm {
+  padding-bottom: 2rem;
+}
+.pb-md {
+  padding-bottom: 5rem;
+}
+.pb-lg {
+  padding-bottom: 10rem;
+}
+.pb-hg {
+  padding-bottom: 15rem;
+}
 
-.ps-xs{padding-left: 1rem;}
-.ps-sm{padding-left: 2rem;}
-.ps-md{padding-left: 5rem;}
-.ps-lg{padding-left: 10rem;}
-.ps-hg{padding-left: 15rem;}
+.ps-xs {
+  padding-left: 1rem;
+}
+.ps-sm {
+  padding-left: 2rem;
+}
+.ps-md {
+  padding-left: 5rem;
+}
+.ps-lg {
+  padding-left: 10rem;
+}
+.ps-hg {
+  padding-left: 15rem;
+}
 
-.pe-xs{padding-right: 1rem;}
-.pe-sm{padding-right: 2rem;}
-.pe-md{padding-right: 5rem;}
-.pe-lg{padding-right: 10rem;}
-.pe-hg{padding-right: 15rem;}
+.pe-xs {
+  padding-right: 1rem;
+}
+.pe-sm {
+  padding-right: 2rem;
+}
+.pe-md {
+  padding-right: 5rem;
+}
+.pe-lg {
+  padding-right: 10rem;
+}
+.pe-hg {
+  padding-right: 15rem;
+}
 
-.px-xs{padding: 0 1rem;}
-.px-sm{padding: 0 2rem;}
-.px-md{padding: 0 5rem;}
-.px-lg{padding: 0 10rem;}
-.px-hg{padding: 0 15rem;}
+.px-xs {
+  padding: 0 1rem;
+}
+.px-sm {
+  padding: 0 2rem;
+}
+.px-md {
+  padding: 0 5rem;
+}
+.px-lg {
+  padding: 0 10rem;
+}
+.px-hg {
+  padding: 0 15rem;
+}
 
-.py-xs{padding: 1rem 0;}
-.py-sm{padding: 2rem 0;}
-.py-md{padding: 5rem 0;}
-.py-lg{padding: 10rem 0;}
-.py-hg{padding: 15rem 0;}
+.py-xs {
+  padding: 1rem 0;
+}
+.py-sm {
+  padding: 2rem 0;
+}
+.py-md {
+  padding: 5rem 0;
+}
+.py-lg {
+  padding: 10rem 0;
+}
+.py-hg {
+  padding: 15rem 0;
+}
