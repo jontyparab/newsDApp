@@ -9,9 +9,15 @@
     "format": "prettier .  --write"
   },
   "dependencies": {
+    "chai": "^4.3.6",
+    "chai-as-promised": "^7.1.1",
+    "chai-bignumber": "^3.0.0",
+    "mocha": "^9.2.0",
+    "truffle": "^5.4.33",
     "vue": "^3.2.25",
     "vue-router": "^4.0.0-0",
-    "vuex": "^4.0.0-0"
+    "vuex": "^4.0.0-0",
+    "web3": "^1.7.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.0.0",
