@@ -1,0 +1,17 @@
+.icon-button {
+  position: relative;
+  // height: 5rem;
+  // width: 5rem;
+  // border-radius: 50%;
+  border: 0;
+  overflow: hidden;
+  background: transparent;
+  user-select: none;
+  outline: none;
+
+  &__svg {
+    @include absCenter;
+    height: 50%;
+    width: 50%;
+  }
+}

@@ -1,0 +1,32 @@
+.text-verifier {
+  width: 100%;
+  max-width: 100vw;
+
+  &__actual,
+  &__entered {
+    display: flex;
+    align-items: center;
+  }
+
+  &__value {
+    display: block;
+    width: 100%;
+    white-space: nowrap;
+    overflow-x: auto;
+  }
+
+  &__copy-btn,
+  &__paste-btn {
+    cursor: pointer;
+
+    &:active {
+      box-shadow: inset var(--shadow-xs);
+    }
+  }
+
+  &__entered {
+    input {
+      width: 100%;
+    }
+  }
+}

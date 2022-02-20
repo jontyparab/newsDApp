@@ -7,9 +7,16 @@
       font-weight: $font-weight;
       font-display: swap;
       src: local($font-family),
-        url($font-file + $font-weight + ".woff2") format("woff2");
+        url($font-file + $font-weight + '.woff2') format('woff2');
     }
   }
+}
+
+@mixin textClamp($lines) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  -webkit-line-clamp: $lines;
 }
 
 @mixin absCenter {

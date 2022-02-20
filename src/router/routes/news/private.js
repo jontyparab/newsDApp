@@ -1,6 +1,6 @@
-import NewsForm from "@/views/NewsForm.vue";
-import NewsList from "@/views/NewsList.vue";
-import NewsDetail from "@/views/NewsDetail.vue";
+import NewsForm from "@/views/news-form.vue";
+import NewsList from "@/views/news-list.vue";
+import NewsDetail from "@/views/news-detail.vue";
 
 const routes = [
   {

@@ -1,0 +1,26 @@
+.rotate {
+  transform-origin: center;
+  animation: rotate 2s linear infinite;
+}
+.scale {
+  transform-origin: center;
+  animation: scale 0.8s alternate-reverse infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes scale {
+  from {
+    transform: scale3d(0.9, 0.9, 0.9);
+  }
+  to {
+    transform: scale3d(1.1, 1.1, 1.1);
+  }
+}

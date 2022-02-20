@@ -41,18 +41,13 @@
         font-weight: 600;
         color: var(--color-grey-dark-3);
 
-        & > p {
-          display: -webkit-box;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-        }
-
         &--title {
-          -webkit-line-clamp: 2;
+          @include textClamp(2);
+          font-weight: 600;
         }
 
         &--summary {
-          -webkit-line-clamp: 2;
+          @include textClamp(2);
           font-weight: normal;
           font-size: 1.4rem;
         }
@@ -88,30 +83,20 @@
       color: var(--color-white);
       border-radius: 0 0 var(--border-radius-sm) var(--border-radius-sm);
 
-      &::after {
-        content: "";
-        position: absolute;
-        inset: 0 0 0 0;
-        z-index: 0;
-        background: linear-gradient(
-          var(--color-black),
-          transparent 15%,
-          transparent 75%,
-          var(--color-black) 100%
-        );
-        border-radius: inherit;
-        opacity: 0.8;
-      }
-    }
-
-    &__options {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      width: inherit;
-      position: absolute;
-      top: 0;
-      z-index: 1;
+      // &::after {
+      //   content: '';
+      //   position: absolute;
+      //   inset: 0 0 0 0;
+      //   z-index: 0;
+      //   background: linear-gradient(
+      //     var(--color-black),
+      //     transparent 15%,
+      //     transparent 75%,
+      //     var(--color-black) 100%
+      //   );
+      //   border-radius: inherit;
+      //   opacity: 0.8;
+      // }
     }
 
     &__image {
@@ -125,13 +110,34 @@
       filter: brightness(90%);
     }
 
+    &__overlay[role='presentation'] {
+      position: absolute;
+      inset: 0 0 0 0;
+      background: linear-gradient(
+        var(--color-black),
+        transparent 15%,
+        transparent 75%,
+        var(--color-black) 100%
+      );
+      border-radius: inherit;
+      opacity: 0.8;
+    }
+
+    &__options {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      width: inherit;
+      position: absolute;
+      top: 0;
+    }
+
     &__info {
       display: flex;
       align-items: center;
       width: inherit;
       position: absolute;
       bottom: 0;
-      z-index: 1;
 
       &--time {
       }
