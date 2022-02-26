@@ -5,6 +5,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "test": "vitest",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src",
     "format": "prettier .  --write"
   },
@@ -14,19 +15,29 @@
     "chai-bignumber": "^3.0.0",
     "mocha": "^9.2.0",
     "truffle": "^5.4.33",
+    "@soerenmartius/vue3-clipboard": "^0.1.2",
+    "axios": "^0.26.0",
+    "darkreader": "^4.9.44",
+    "swiper": "^8.0.6",
+    "video.js": "^7.17.0",
     "vue": "^3.2.25",
+    "vue-dragscroll": "^3.0.1",
     "vue-router": "^4.0.0-0",
-    "vuex": "^4.0.0-0",
-    "web3": "^1.7.0"
+    "web3": "^1.7.0",
+    "vue-social-sharing": "^4.0.0-alpha4",
+    "vuex": "^4.0.0-0"
   },
   "devDependencies": {
+    "@testing-library/vue": "^6.5.1",
     "@vitejs/plugin-vue": "^2.0.0",
     "@vue/compiler-sfc": "^3.0.0",
     "eslint": "^8.9.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-vue": "^8.4.1",
+    "happy-dom": "^2.31.1",
     "sass": "^1.42.1",
     "unplugin-vue-components": "^0.17.18",
-    "vite": "^2.7.2"
+    "vite": "^2.7.2",
+    "vitest": "^0.3.4"
   }
 }

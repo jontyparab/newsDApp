@@ -1,12 +1,12 @@
-import { createRouter, createWebHistory } from "vue-router";
-import HomePage from "@/views/HomePage.vue";
-import newsRoutes from "./routes/news/index";
-import userRoutes from "./routes/user/index";
+import { createRouter, createWebHistory } from 'vue-router';
+import HomePage from '@/views/home-page.vue';
+import newsRoutes from './routes/news/index';
+import userRoutes from './routes/user/index';
 
 const routes = [
   {
-    path: "/",
-    name: "HomePage",
+    path: '/',
+    name: 'HomePage',
     component: HomePage,
   },
 ]
@@ -14,7 +14,7 @@ const routes = [
   .concat(userRoutes);
 
 const router = createRouter({
-  mode: "history",
+  mode: 'history',
   history: createWebHistory(),
   routes: routes,
 });

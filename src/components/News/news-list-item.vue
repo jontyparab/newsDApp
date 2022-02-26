@@ -1,0 +1,29 @@
+<template>
+  <article class="news-list-item my-xs p-sm">
+    <div class="news-list-item__image-wrap">
+      <img
+        src="https://picsum.photos/id/1015/600/400"
+        alt=""
+        class="news-list-item__image"
+      />
+    </div>
+    <div class="news-list-item__details pt-xs">
+      <h4 class="news-list-item__details--title">
+        Animals get boost from the Southampton tree vandals
+      </h4>
+      <p class="news-list-item__details--summary my-xs">
+        Antony Blinken’s Asia-Pacific trip during the crisis with Russia and
+        Ukraine signals that the U.S. is committing to the world’s largest
+        region — and to competition with China.
+      </p>
+    </div>
+    <div class="news-list-item__meta">
+      <div class="news-list-item__meta--time">15 minutes ago</div>
+      <icon-button
+        class="news-list-item__meta--saved"
+        icon="bookmark_border"
+        :size="0.8"
+      ></icon-button>
+    </div>
+  </article>
+</template>

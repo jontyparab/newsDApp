@@ -7,9 +7,16 @@
       font-weight: $font-weight;
       font-display: swap;
       src: local($font-family),
-        url($font-file + $font-weight + ".woff2") format("woff2");
+        url($font-file + $font-weight + '.woff2') format('woff2');
     }
   }
+}
+
+@mixin textClamp($lines) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  -webkit-line-clamp: $lines;
 }
 
 @mixin absCenter {
@@ -30,6 +37,20 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+@mixin stateUpdate {
+  @each $prop in ('danger', 'success', 'info', 'warning') {
+    .text-#{$prop} {
+      color: var(--color-#{$prop}) !important;
+    }
+    .bg-#{$prop} {
+      background-color: var(--color-#{$prop}-light) !important;
+    }
+    .border-#{$prop} {
+      border-color: var(--color-#{$prop}) !important;
+    }
+  }
 }
 
 // MEDIA QUERY MANAGER

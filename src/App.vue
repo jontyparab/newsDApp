@@ -1,14 +1,8 @@
 <template>
-  <navigation-bar></navigation-bar>
+  <the-navigation-bar></the-navigation-bar>
   <router-view />
 </template>
 
-<script>
-import NavigationBar from "./components/UI/NavigationBar.vue";
-export default {
-  components: {
-    NavigationBar,
-  },
-  setup() {},
-};
+<script setup>
+
 </script>

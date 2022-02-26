@@ -1,0 +1,38 @@
+.share-modal {
+  width: 80rem;
+
+  &__header,
+  &__footer {
+    & > span {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--color-grey-dark-3);
+    }
+  }
+
+  &__body {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: clamp(20rem, 33.33%, 50%);
+    grid-template-rows: repeat(3, minmax(7rem, 1fr));
+    overflow: scroll;
+  }
+
+  &__network {
+    display: grid;
+    grid-template-columns: 5rem 1fr;
+    @include flexCenter;
+    border-radius: var(--border-radius-sm);
+    color: #ffffff;
+    background-color: #333;
+    overflow: hidden;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 2rem;
+    font-weight: 300;
+    user-select: none;
+  }
+
+  &__footer {
+  }
+}

@@ -41,10 +41,14 @@ body {
 }
 
 .container {
+  width: 100vw;
+  padding: 0 2rem;
   max-width: 120rem;
 }
 
 ::selection {
-  background: var(--color-quaternary-dark);
+  background: var(--color-quaternary-light);
   color: var(--color-white);
 }
+
+@include stateUpdate;
