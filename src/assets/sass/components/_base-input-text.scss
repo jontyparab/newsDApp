@@ -8,18 +8,19 @@
 
   &__field {
     padding: 1rem;
-    border: 2px solid var(--color-grey-light-3);
+    border: 1px solid var(--color-grey-light-3);
     border-radius: var(--border-radius-sm);
     color: var(--color-dark);
     overflow: hidden;
+    background: var(--color-white);
 
     &:focus {
-      border: 2px solid var(--color-secondary-light);
+      // border: 2px solid var(--color-secondary);
       outline: none;
 
       & + .input-text__label {
         transform: translate(0.5rem, -50%);
-        color: var(--color-secondary-light);
+        // color: var(--color-secondary);
         font-size: 90%;
         margin-left: 0.3rem;
         padding: 0.8rem;
@@ -48,5 +49,8 @@
     );
     transform: translateY(45%);
     transition: all 0.1s linear;
+  }
+
+  &__error {
   }
 }

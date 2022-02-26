@@ -39,6 +39,20 @@
   color: transparent;
 }
 
+@mixin stateUpdate {
+  @each $prop in ('danger', 'success', 'info', 'warning') {
+    .text-#{$prop} {
+      color: var(--color-#{$prop}) !important;
+    }
+    .bg-#{$prop} {
+      background-color: var(--color-#{$prop}-light) !important;
+    }
+    .border-#{$prop} {
+      border-color: var(--color-#{$prop}) !important;
+    }
+  }
+}
+
 // MEDIA QUERY MANAGER
 /*
 0 - 600px:      Phone

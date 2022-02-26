@@ -15,8 +15,7 @@
     overflow-x: auto;
   }
 
-  &__copy-btn,
-  &__paste-btn {
+  &__copy-btn {
     cursor: pointer;
 
     &:active {
@@ -28,5 +27,9 @@
     input {
       width: 100%;
     }
+  }
+
+  &__status {
+    align-self: flex-start;
   }
 }

@@ -9,26 +9,24 @@
 @import 'base/typography';
 @import 'base/utilities';
 
+// Layout
+@import 'layout/header';
+@import 'layout/footer';
+@import 'layout/scrollbar';
+
 // Components (Import here or in components directly)
 @import 'components/base-card';
 @import 'components/base-button';
 @import 'components/base-input-text';
-@import 'components/base-textarea';
 @import 'components/base-dialog';
-
+@import 'components/base-video';
 // other
 @import 'components/navigation-bar';
 @import 'components/icon-button';
 @import 'components/text-verifier';
 @import 'components/share-panel';
-
 // news
 @import 'components/news-swiper';
-
-// Layout
-@import 'layout/header';
-@import 'layout/footer';
-@import 'layout/scrollbar';
 
 // Pages
 @import 'pages/home';

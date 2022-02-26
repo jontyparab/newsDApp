@@ -26,12 +26,15 @@
       class="text-verifier__entered mb-sm"
     >
       <base-input-text
+        input-type="text"
+        :help-text="fieldMsg"
+        :color="currentState.color"
         title="Paste from clipboard"
         label="Enter Hash"
         @input="setCurrentState"
       ></base-input-text>
       <icon-button
-        class="text-verifier__paste-btn"
+        class="text-verifier__status"
         :icon="currentState.icon"
         :animation="currentState.animation"
         :color="currentState.color"
@@ -42,7 +45,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, toRefs, computed, onMounted } from 'vue';
+import { ref } from 'vue';
 import { toClipboard } from '@soerenmartius/vue3-clipboard';
 
 const props = defineProps({
@@ -58,7 +61,6 @@ const props = defineProps({
     },
   },
 });
-const { trueValue } = toRefs(props);
 
 const verificationStates = {
   loading: {
@@ -69,33 +71,37 @@ const verificationStates = {
   success: {
     icon: 'verified',
     animation: 'scale',
-    color: 'green',
+    color: 'var(--color-success)',
   },
   error: {
     icon: 'error_outline',
     animation: 'scale',
-    color: 'crimson',
+    color: 'var(--color-danger)',
   },
 };
+
 let currentState = ref(verificationStates.loading);
+let fieldMsg = ref('');
 const setCurrentState = (e) => {
   const inputVal = e.target.value;
-  const value = trueValue.value;
+  const value = props.trueValue;
   if (inputVal !== '') {
     if (inputVal === value) {
       currentState.value = verificationStates.success;
+      fieldMsg.value = 'HASH values matched.';
     } else if (inputVal !== value) {
       currentState.value = verificationStates.error;
+      fieldMsg.value = 'HASH values did not match.';
     }
   } else {
     currentState.value = verificationStates.loading;
+    fieldMsg.value = '';
   }
 };
 
 async function copyHash() {
   try {
-    await toClipboard(trueValue.value);
-    console.log('Copied to clipboard');
+    await toClipboard(props.trueValue);
   } catch (e) {
     console.error(e);
   }

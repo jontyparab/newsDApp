@@ -12,7 +12,9 @@
   "dependencies": {
     "@soerenmartius/vue3-clipboard": "^0.1.2",
     "axios": "^0.26.0",
+    "darkreader": "^4.9.44",
     "swiper": "^8.0.6",
+    "video.js": "^7.17.0",
     "vue": "^3.2.25",
     "vue-dragscroll": "^3.0.1",
     "vue-router": "^4.0.0-0",

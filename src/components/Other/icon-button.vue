@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import { defineProps, computed } from 'vue';
+import { computed } from 'vue';
 import SVG from '@/assets/images/sprite.svg';
 const props = defineProps({
   icon: {

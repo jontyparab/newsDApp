@@ -3,7 +3,7 @@
     <div class="news-detail">
       <div class="news-detail__figure">
         <img
-          src="https://picsum.photos/id/1015/600/400"
+          src="https://picsum.photos/id/1015/100/100"
           alt=""
           class="news-detail__image"
         />

@@ -41,6 +41,8 @@ body {
 }
 
 .container {
+  width: 100vw;
+  padding: 0 2rem;
   max-width: 120rem;
 }
 
@@ -48,3 +50,5 @@ body {
   background: var(--color-quaternary-light);
   color: var(--color-white);
 }
+
+@include stateUpdate;

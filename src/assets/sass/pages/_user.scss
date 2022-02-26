@@ -1,5 +1,6 @@
 .auth {
-  width: 100%;
+  @include flexCenter;
+  flex-direction: column;
   --form-border: solid 2px var(--color-secondary-light);
 
   h1 {
@@ -10,6 +11,7 @@
   &__wrap {
     border-radius: var(--border-radius-md);
     overflow: clip;
+    width: 60rem;
   }
 
   &__tabs {

@@ -23,20 +23,27 @@
           <h3>{{ isSignup ? 'Registration' : 'Login' }}</h3>
           <base-input-text
             v-show="isSignup"
+            input-type="text"
             spellcheck="false"
             label="First name"
           ></base-input-text>
           <base-input-text
             v-show="isSignup"
+            input-type="text"
             spellcheck="false"
             label="Last name"
           ></base-input-text>
-          <base-input-text label="Email"></base-input-text>
-          <base-input-text type="password" label="Password"></base-input-text>
+          <base-input-text input-type="text" label="Email"></base-input-text>
+          <base-input-text
+            input-type="password"
+            label="Password"
+            autocomplete="on"
+          ></base-input-text>
           <base-input-text
             v-show="isSignup"
-            type="password"
+            input-type="password"
             label="Confirm Password"
+            autocomplete="on"
           ></base-input-text>
         </form>
       </div>
