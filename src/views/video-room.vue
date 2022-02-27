@@ -407,4 +407,81 @@ init();
 //     // Peers connected!
 //   }
 // });
+
+// /* Remote stream */
+// // Adding local tracks
+// const localStream = await getUserMedia({ vide: true, audio: true });
+// const peerConnection = new RTCPeerConnection(iceConfig);
+// localStream.getTracks().forEach((track) => {
+//   peerConnection.addTrack(track, localStream);
+// });
+
+// // Adding remote tracks
+// /* To receive the remote tracks that were added by the other peer, we register a listener on the local RTCPeerConnection listening for the track event. The RTCTrackEvent contains an array of MediaStream objects that have the same MediaStream.id values as the peer's corresponding local streams. In our example, each track is only associated with a single stream.
+// Note that while MediaStream IDs match on both sides of the peer connection, the same is generally not true for MediaStreamTrack IDs.
+// */
+// const remoteVideo = document.querySelector('#remoteVideo');
+// peerConnection.addEventListener('track', async (event) => {
+//   const [remoteStream] = event.streams;
+//   remoteVideo.srcObject = remoteStream;
+// });
+
+// /* Data channels */
+// // The WebRTC standard also covers an API for sending arbitrary data over a RTCPeerConnection.
+// const peerConnection = new RTCPeerConnection(configuration);
+// const dataChannel = peerConnection.createDataChannel(); // RTCDataChannel obj
+// // The remote peer can receive data channels by listening the datachannel event.
+// // it is of the type RTCDataChannelEvent
+// const peerConnection = new RTCPeerConnection(configuration);
+// peerConnection.addEventListener('datachannel', (event) => {
+//   const dataChannel = event.channel;
+// });
+
+// // Open and close events
+// const messageBox = document.querySelector('#messageBox');
+// const sendButton = document.querySelector('#sendButton');
+// const peerConnection = new RTCPeerConnection(configuration);
+// const dataChannel = peerConnection.createDataChannel();
+// // Data channel can be used only after open event
+// // Enable textarea and button when opened
+// dataChannel.addEventListener('open', (event) => {
+//   messageBox.disabled = false;
+//   messageBox.focus();
+//   sendButton.disabled = false;
+// });
+// // Disable input when closed
+// dataChannel.addEventListener('close', (event) => {
+//   messageBox.disabled = false;
+//   sendButton.disabled = false;
+// });
+
+// /* Sending and receiving message */
+// // Send a simple text message when we click the button
+
+// const messageBox = document.querySelector('#messageBox');
+// const sendButton = document.querySelector('#sendButton');
+// sendButton.addEventListener('click', (event) => {
+//   const message = messageBox.textContent;
+//   dataChannel.send(message);
+// });
+
+// // Append new messages to the box of incoming messages
+// const incomingMessages = document.querySelector('#incomingMessages');
+// const peerConnection = new RTCPeerConnection(configuration);
+// const dataChannel = peerConnection.createDataChannel();
+// dataChannel.addEventListener('message', (event) => {
+//   const message = event.data;
+//   incomingMessages.textContent += message + '\n';
+// });
+// /* TURN Server */
+// const iceConfiguration = {
+//     iceServers: [
+//         {
+//             urls: 'turn:my-turn-server.mycompany.com:19403',
+//             username: 'optional-username',
+//             credentials: 'auth-token'
+//         }
+//     ]
+// }
+// const peerConnection = new RTCPeerConnection(iceConfiguration);
 </script>
