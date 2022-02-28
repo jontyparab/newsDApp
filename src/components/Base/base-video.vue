@@ -16,12 +16,17 @@ const props = defineProps({
 });
 let player = ref(null);
 let videoPlayer = ref(null);
+
+defineExpose({
+  videoPlayer,
+});
+
 onMounted(() => {
   player.value = videojs(
     videoPlayer.value,
     props.options,
     function onPlayerReady() {
-      console.log('onPlayerReady', this);
+      console.log('onPlayerReady', videoPlayer.value);
     }
   );
 });
