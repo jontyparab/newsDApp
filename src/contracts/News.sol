@@ -6,7 +6,7 @@ contract News {
   uint public newsCount = 0;
 
   mapping(uint => newsArticle) public news;
-  mapping(address => mapping(uint => newsArticle)) public myFavNews;
+  mapping(address => uint[]) public myBookMarks;
 
   struct newsArticle {
     uint id;
@@ -26,14 +26,10 @@ contract News {
     address payable author
   );
 
-  event favAdded(
-    uint id,
-    string title,
-    string hashOfImage,
-    string description,
-    string category,
-    address payable author
+  event bookMarkAdded(
+    uint id
   );
+
 
   function addNews(string memory _title, string memory _imgHash, string memory _description, string memory _category) public {
     require(bytes(_title).length > 0);
@@ -47,16 +43,17 @@ contract News {
     emit newsCreated(newsCount, _title, _imgHash, _description, _category, msg.sender);
   }
 
-  
+  function getBookMarks() public view returns (uint[] memory) {
+    uint[] memory _myBookMarksList = new uint[](myBookMarks[msg.sender].length);
+    for(uint j = 0; j < myBookMarks[msg.sender].length; j++) {
+      _myBookMarksList[j] = myBookMarks[msg.sender][j];
+    }
+    return _myBookMarksList;
+  }
 
-  function addFav(uint _id) public {
-    string memory _title = news[_id].title;
-    string memory _imgHash = news[_id].hashOfImage;
-    string memory _description = news[_id].description;
-    string memory _category = news[_id].category;
-    address payable _author = news[_id].author;
+  function addBookMarks(uint _id) public {
+    myBookMarks[msg.sender].push(_id);   
+    emit bookMarkAdded(_id);
 
-    myFavNews[msg.sender][_id] = newsArticle(_id, _title, _imgHash, _description, _category, _author);
-    emit favAdded(_id, _title, _imgHash, _description, _category, _author);
   }
 }
