@@ -31,8 +31,9 @@ contract("News", ([deployer, author, reader]) => {
     describe('News', async () => {
         let result, newsCount, bookMarksCount
         const imgHash = 'abc123'
+        const newsHash = 'xyz123'
         before(async () => {
-            result = await news.addNews("title", 'abc123', "description", "category", { from: author })
+            result = await news.addNews(newsHash, imgHash, { from: author })
             newsCount = await news.newsCount()
         })
 
@@ -40,20 +41,16 @@ contract("News", ([deployer, author, reader]) => {
             assert.equal(newsCount, 1)
             const event = await result.logs[0].args
             assert.equal(event.id.toNumber(), newsCount.toNumber(), 'the id is not correct')
-            assert.equal(event.title, 'title', 'the title is not correct')
+            assert.equal(event.hashOfNews, newsHash, 'the title is not correct')
             assert.equal(event.hashOfImage, imgHash, 'The hash is not correct')
-            assert.equal(event.description, 'description', 'the description is not correct')
-            assert.equal(event.category, 'category', 'the category is not correct')
             assert.equal(event.author, author, 'the address of author is not correct')
         })
 
         it("Show news", async () => {
             const article = await news.news(newsCount)
             assert.equal(article.id.toNumber(), newsCount.toNumber(), "The id is not correct!")
-            assert.equal(article.title, "title", "The title is not correct!")
+            assert.equal(article.hashOfNews, newsHash, "The title is not correct!")
             assert.equal(article.hashOfImage, imgHash, "The hash is not correct!")
-            assert.equal(article.description, "description", "The description is not correct!")
-            assert.equal(article.category, "category", "The category is not correct!")
             assert.equal(article.author, author, "The author address is not correct!")
         })
 
@@ -65,10 +62,8 @@ contract("News", ([deployer, author, reader]) => {
             const article = await news.news(id)
             assert.equal(bookMarksCount, 1)
             assert.equal(article.id.toNumber(), newsCount.toNumber(), "The id is not correct!")
-            assert.equal(article.title, "title", "The title is not correct!")
+            assert.equal(article.hashOfNews, newsHash, "The title is not correct!")
             assert.equal(article.hashOfImage, imgHash, "The hash is not correct!")
-            assert.equal(article.description, "description", "The description is not correct!")
-            assert.equal(article.category, "category", "The category is not correct!")
             assert.equal(article.author, author, "The author address is not correct!")
         })
     })

@@ -10,19 +10,15 @@ contract News {
 
   struct newsArticle {
     uint id;
-    string title;
     string hashOfImage;
-    string description;
-    string category;
+    string hashOfNews;
     address payable author;
   }
 
   event newsCreated(
     uint id,
-    string title,
     string hashOfImage,
-    string description,
-    string category,
+    string hashOfNews,
     address payable author
   );
 
@@ -31,16 +27,14 @@ contract News {
   );
 
 
-  function addNews(string memory _title, string memory _imgHash, string memory _description, string memory _category) public {
-    require(bytes(_title).length > 0);
+  function addNews(string memory _newsHash, string memory _imgHash) public {
     require(bytes(_imgHash).length > 0);
-    require(bytes(_description).length > 0);
-    require(bytes(_category).length > 0);
+    require(bytes(_newsHash).length > 0);
     require(msg.sender != address(0x0));
     
     newsCount++;
-    news[newsCount] = newsArticle(newsCount, _title, _imgHash, _description, _category, msg.sender);
-    emit newsCreated(newsCount, _title, _imgHash, _description, _category, msg.sender);
+    news[newsCount] = newsArticle(newsCount, _imgHash, _newsHash, msg.sender);
+    emit newsCreated(newsCount, _imgHash, _newsHash, msg.sender);
   }
 
   function getBookMarks() public view returns (uint[] memory) {
