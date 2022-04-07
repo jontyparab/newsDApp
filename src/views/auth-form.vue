@@ -58,7 +58,7 @@
             :validation="[['required'], ['email']]"
             label="Email"
           />
-          <FormKit
+          <!-- <FormKit
             type="password"
             name="password"
             label="Password"
@@ -73,7 +73,7 @@
             :validation="[['confirm'], ['required']]"
             autocomplete="on"
             :preserve="true"
-          />
+          /> -->
         </FormKit>
       </div>
     </div>
@@ -82,18 +82,28 @@
 
 <script setup>
 import { ref, computed, reactive } from 'vue';
+import { useUserStore } from '../stores/useUserStore';
+
+// import { useAxios } from '@vueuse/integrations/useAxios';
+// import { axiosInstance } from '@/assets/js/services/axios';
+// const { data, isLoading, isFinished, execute } = useAxios(axiosInstance);
+
 const authForm = reactive({});
 let isRegister = ref(true);
+
+const userStore = useUserStore();
+
 const changeAuth = function (s) {
   isRegister.value = s === 'Login' ? false : true;
 };
+
 const authenticate = async (e) => {
-  console.log('Authenticate user', e);
-  return new Promise((r) => {
-    setTimeout(() => {
-      r('Success');
-    }, 2000);
-  });
+  if (isRegister.value == true) {
+    // TODO: Pass wallet info also to action
+    userStore.signUp(authForm);
+  } else {
+    userStore.login({ ...authForm, walletId: 'my-wallet-id' });
+  }
 };
 </script>
 ,

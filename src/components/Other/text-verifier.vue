@@ -62,7 +62,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import { toClipboard } from '@soerenmartius/vue3-clipboard';
+import { useClipboard } from '@vueuse/core';
 
 const props = defineProps({
   trueValue: {
@@ -101,9 +101,10 @@ const setCurrentState = (inputVal) => {
   }
 };
 
+const { copy } = useClipboard();
 async function copyHash() {
   try {
-    await toClipboard(props.trueValue);
+    copy(props.trueValue);
   } catch (e) {
     console.error(e);
   }

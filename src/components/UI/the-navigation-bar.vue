@@ -43,19 +43,19 @@ const { role } = storeToRefs(userStore);
 // for checking ability from template
 const { can } = useAbility();
 
-setTimeout(() => {
-  updateAbility();
-}, 5000);
+// setTimeout(() => {
+//   updateAbility();
+// }, 5000);
 
-const updateAbility = () => {
-  if (['admin'].includes(role.value)) {
-    // for setting rules on ability
-    const { can, rules } = ability;
-    can('manage', 'User');
-    ability.update(rules);
-    console.log(rules);
-  }
-};
+// const updateAbility = () => {
+//   if (['admin'].includes(role.value)) {
+//     // for setting rules on ability
+//     const { can, rules } = ability;
+//     can('manage', 'User');
+//     ability.update(rules);
+//     console.log(rules);
+//   }
+// };
 
 // import {
 //   enable as enableDarkMode,

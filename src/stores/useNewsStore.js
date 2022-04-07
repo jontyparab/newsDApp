@@ -1,11 +1,13 @@
 import { defineStore } from 'pinia';
+import { useUserStore } from './useUserStore';
+import axios from '@/assets/js/services/axios';
 
 export const useNewsStore = defineStore('news', {
   state: () => {
     return {
       newsList: [
         {
-          id: 'sdinv9ewgn83vsd9n23inv9n23r',
+          id: 'sfexce234fsf',
           imageUrl: 'https://picsum.photos/id/1015/600/400',
           headline: 'Test headline',
           lead: 'Test lead',
@@ -31,18 +33,46 @@ export const useNewsStore = defineStore('news', {
           __typename: 'News',
         },
       ],
+      bookmarks: {},
     };
   },
   actions: {
-    toggleBookmark(id) {
+    async toggleBookmark(id, isBookmarked) {
+      const userStore = useUserStore();
       const news = this.getNewsById(id);
-      news.isBookmarked = !news.isBookmarked;
+      try {
+        if (isBookmarked) {
+          // const r = await axios.get(`/news/${id}.json`);
+          const deletedBookmark = await axios.delete(
+            `/users/${userStore.walletId}/bookmarks.json`,
+            {
+              equalTo: id,
+            }
+          );
+          console.log(deletedBookmark);
+          news.isBookmarked = false;
+        } else {
+          const data = await axios.post(
+            `/users/${userStore.walletId}/bookmarks.json`,
+            id
+          );
+          console.log(data);
+          news.isBookmarked = true;
+        }
+      } catch (error) {
+        console.error('Error bookmarking: ', error);
+      }
     },
   },
   getters: {
     getNewsById: (state) => {
-      console.log('getNews Ran');
-      return (id) => state.newsList.find((n) => n.id === id);
+      return (id) => {
+        const news = state.newsList.find((n) => n.id === id);
+        if (!news) {
+          // TODO: should retrieve specific news from blockchain
+        }
+        return news;
+      };
     },
   },
 });

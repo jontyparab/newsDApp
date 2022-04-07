@@ -43,7 +43,7 @@
                 : 'var(--color-white)'
             "
             title="Bookmark"
-            @click="toggleBookmark(news.id)"
+            @click="toggleBookmark(news.id, news.isBookmarked)"
           ></icon-button>
         </div>
         <div class="news-detail__info px-sm">
@@ -52,7 +52,7 @@
             <span>{{ news.author }}</span>
           </div>
 
-          <div class="news-detail__info--2 ms-auto">
+          <!-- <div class="news-detail__info--2 ms-auto">
             <icon-button
               class=""
               icon="visibility"
@@ -61,7 +61,7 @@
               title="Views"
             ></icon-button>
             {{ news.viewCount }}
-          </div>
+          </div> -->
         </div>
       </div>
       <div class="news-detail__content px-sm">

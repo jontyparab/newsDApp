@@ -1,11 +1,11 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
 
-// TODO: Add SDKs for Firebase products that you want to use
+// NOTE: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: 'AIzaSyD35k0SDHOisZjJeSzYYYQNruGl4fNDOiE',
   authDomain: 'news-dapp.firebaseapp.com',
   projectId: 'news-dapp',
