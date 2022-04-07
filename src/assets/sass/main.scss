@@ -1,3 +1,6 @@
+// Vendors
+@import 'vendors/formkit';
+
 // Abstracts
 @import 'abstracts/functions';
 @import 'abstracts/mixins';
@@ -21,10 +24,11 @@
 @import 'components/base-dialog';
 @import 'components/base-video';
 // other
-@import 'components/navigation-bar';
+@import 'components/the-navigation-bar';
 @import 'components/icon-button';
 @import 'components/text-verifier';
 @import 'components/share-panel';
+@import 'components/tiptap-editor';
 // news
 @import 'components/news-swiper';
 

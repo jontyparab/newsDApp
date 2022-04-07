@@ -1,0 +1,144 @@
+.tiptap-editor {
+  --editor-size: 40rem;
+  --header-size: 6rem;
+  --footer-size: 6rem;
+
+  position: relative;
+  line-height: inherit;
+
+  &__header-wrapper {
+    position: absolute;
+    top: 0 0 var(--header-size) 0;
+    z-index: 2;
+    width: 100%;
+    border-radius: var(--border-radius-md); // hiding corners from input border
+    background-color: var(--color-white);
+    overflow-x: auto;
+  }
+
+  &__header {
+    display: flex;
+    flex-wrap: nowrap;
+
+    .icon-button {
+      flex: 1 0 auto;
+      border-radius: var(--border-radius-md);
+      margin: 0.5rem;
+      cursor: pointer;
+      &.is-active {
+        background-color: var(--color-grey-dark-3);
+        svg {
+          filter: invert(1);
+        }
+      }
+    }
+  }
+
+  &__content {
+    // position: absolute;
+    // inset: 0 0 0 0;
+    padding: var(--header-size) 1rem 2rem 1rem;
+    outline: none;
+    overflow: scroll;
+    border-radius: var(--border-radius-sm);
+    box-shadow: var(--fk-border-box-shadow);
+    min-height: var(--editor-size);
+    max-height: 75vh;
+
+    &:focus {
+      box-shadow: var(--fk-border-box-shadow-focus);
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      line-height: 1.1;
+    }
+
+    ul,
+    ol {
+      padding: 0 1.5rem;
+    }
+
+    code {
+      background-color: #6161611a;
+      color: #616161;
+    }
+
+    pre {
+      background: #0d0d0d;
+      color: #fff;
+      font-family: JetBrainsMono, monospace;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+    }
+
+    pre code {
+      color: inherit;
+      padding: 0;
+      background: none;
+      font-size: 0.8rem;
+    }
+
+    mark {
+      background-color: #faf594;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    hr {
+      margin: 1rem 0;
+    }
+
+    blockquote {
+      padding-left: 1rem;
+      border-left: 2px solid rgba(13, 13, 13, 0.1);
+    }
+
+    hr {
+      border: none;
+      border-top: 2px solid rgba(13, 13, 13, 0.1);
+      margin: 2rem 0;
+    }
+
+    ul[data-type='taskList'] {
+      list-style: none;
+      padding: 0;
+    }
+
+    ul[data-type='taskList'] li {
+      display: flex;
+      align-items: center;
+    }
+
+    ul[data-type='taskList'] li > label {
+      flex: 0 0 auto;
+      margin-right: 0.5rem;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    ul[data-type='taskList'] li > div {
+      flex: 1 1 auto;
+    }
+  }
+
+  &__footer {
+    // position: absolute;
+    // inset: auto 0 0 0;
+    margin-top: 0.4rem;
+    &--character-count {
+      color: var(--color-grey-dark);
+      font-size: 1.3rem;
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+}

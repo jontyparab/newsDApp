@@ -14,7 +14,7 @@ textarea {
 html {
   // This defines what 1rem is
   font-size: 62.5%; //1 rem = 10px; 10px/16px = 62.5%
-  scroll-behavior: smooth;
+  // scroll-behavior: smooth;
 
   @include respond(tab-land) {
     // width < 1200?
@@ -43,6 +43,7 @@ body {
 .container {
   width: 100vw;
   padding: 0 2rem;
+  margin-top: 8rem;
   max-width: 120rem;
 }
 

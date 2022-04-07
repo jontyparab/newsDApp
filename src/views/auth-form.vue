@@ -1,64 +1,99 @@
 <template>
   <div class="container">
-    <div class="auth px-sm">
-      <h1 class="mt-md mb-sm">Create or login into your Account</h1>
+    <div class="auth">
+      <h1 class="mt-md mb-sm">Join us and make a difference!</h1>
       <div class="auth__wrap">
         <div class="auth__tabs">
           <div
-            :class="{ active: !isSignup }"
+            :class="{ active: !isRegister }"
             class="auth__tabs--login p-xs"
             @click="changeAuth('Login')"
           >
             Login
           </div>
           <div
-            :class="{ active: isSignup }"
+            :class="{ active: isRegister }"
             class="auth__tabs--signup p-xs"
-            @click="changeAuth('Sign up')"
+            @click="changeAuth('Register')"
           >
-            Sign up
+            Register
           </div>
         </div>
-        <form class="auth__form p-sm" @submit.prevent="authenticate">
-          <h3>{{ isSignup ? 'Registration' : 'Login' }}</h3>
-          <base-input-text
-            v-show="isSignup"
-            input-type="text"
+        <FormKit
+          v-model="authForm"
+          type="form"
+          :classes="{
+            form: 'auth__form py-sm px-sm',
+          }"
+          incomplete-message="Please enter correct details and try again."
+          name="authForm"
+          :submit-label="isRegister ? 'Register' : 'Login'"
+          :submit-attrs="{
+            wrapperClass: 'submit-wrapper mt-sm',
+          }"
+          @submit="authenticate"
+        >
+          <h3 class="mb-sm">{{ isRegister ? 'Registration' : 'Login' }}</h3>
+          <FormKit
+            v-if="isRegister"
+            type="text"
             spellcheck="false"
             label="First name"
-          ></base-input-text>
-          <base-input-text
-            v-show="isSignup"
-            input-type="text"
+            :validation="[['required']]"
+            name="first_name"
+            :preserve="true"
+          />
+          <FormKit
+            v-if="isRegister"
+            type="text"
             spellcheck="false"
             label="Last name"
-          ></base-input-text>
-          <base-input-text input-type="text" label="Email"></base-input-text>
-          <base-input-text
-            input-type="password"
+            :validation="[['required']]"
+            name="last_name"
+            :preserve="true"
+          />
+          <FormKit
+            type="email"
+            name="email"
+            :validation="[['required'], ['email']]"
+            label="Email"
+          />
+          <FormKit
+            type="password"
+            name="password"
             label="Password"
+            :validation="[['required'], ['length', 5]]"
             autocomplete="on"
-          ></base-input-text>
-          <base-input-text
-            v-show="isSignup"
-            input-type="password"
-            label="Confirm Password"
+          />
+          <FormKit
+            v-if="isRegister"
+            type="password"
+            name="password_confirm"
+            label="Confirm password"
+            :validation="[['confirm'], ['required']]"
             autocomplete="on"
-          ></base-input-text>
-        </form>
+            :preserve="true"
+          />
+        </FormKit>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-let isSignup = ref(true);
+import { ref, computed, reactive } from 'vue';
+const authForm = reactive({});
+let isRegister = ref(true);
 const changeAuth = function (s) {
-  isSignup.value = s === 'Login' ? false : true;
+  isRegister.value = s === 'Login' ? false : true;
 };
-const authenticate = function (e) {
+const authenticate = async (e) => {
   console.log('Authenticate user', e);
+  return new Promise((r) => {
+    setTimeout(() => {
+      r('Success');
+    }, 2000);
+  });
 };
 </script>
 ,

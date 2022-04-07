@@ -1,21 +1,35 @@
 <template>
-  <div class="container">
+  <div
+    class="container"
+    style="height: 20rem; display: flex; align-items: center"
+  >
     <base-video
       v-for="v in videoList"
       :key="v.key"
       :ref="setVideoEl"
       :options="videoOptions"
+      style="flex: 1 0 40%"
     ></base-video>
     <button class="mx-md" @click="openUserMedia">Start Camera</button>
     <button class="mx-md" @click="createRoom">Create Room</button>
     <button class="mx-md" @click="joinRoom">Join Room</button>
+    <button class="mx-md" @click="hangUp">Hang Up</button>
     <input v-model="roomId" />
     <!-- <base-video :options="videoOptions"></base-video> -->
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, toRef, nextTick, onBeforeUpdate, onUpdated } from 'vue';
+import {
+  ref,
+  reactive,
+  toRef,
+  nextTick,
+  onBeforeUpdate,
+  onUpdated,
+  onMounted,
+  onBeforeUnmount,
+} from 'vue';
 import {
   getFirestore,
   collection,
@@ -26,6 +40,7 @@ import {
   doc,
   onSnapshot,
   addDoc,
+  deleteDoc,
   setDoc,
 } from 'firebase/firestore';
 import fbApp from '@/assets/js/services/firebase.js';
@@ -57,7 +72,7 @@ const configuration = {
 const videoList = reactive([]);
 const videoEls = reactive([]);
 const setVideoEl = (el) => {
-  if (el.videoPlayer instanceof HTMLVideoElement) {
+  if (el?.videoPlayer instanceof HTMLVideoElement) {
     videoEls.push(el.videoPlayer);
   }
 };
@@ -65,6 +80,11 @@ let peerConnection = new RTCPeerConnection();
 let localStream = new MediaStream();
 let remoteStream = new MediaStream();
 let roomId = ref('');
+
+const roomsRef = collection(db, `rooms`);
+let unsubRemoteSd;
+let unsubCalleeIce;
+let unsubCallerIce;
 
 async function createRoom() {
   // Code for creating a room below
@@ -113,18 +133,18 @@ async function createRoom() {
   });
 
   // Listening for remote session description below
-  const unsubRemoteSd = onSnapshot(roomRef, async (snapshot) => {
+  unsubRemoteSd = onSnapshot(roomRef, async (snapshot) => {
     const data = snapshot.data();
     if (!peerConnection.currentRemoteDescription && data && data.answer) {
       console.log('Got remote description: ', data.answer);
       const rtcSessionDescription = data.answer;
       await peerConnection.setRemoteDescription(rtcSessionDescription);
-      await createVideo(remoteStream);
+      await createVideo(remoteStream, 'id-2');
     }
   });
 
   // Listen for remote ICE candidates below
-  const unsubCalleeIce = onSnapshot(
+  unsubCalleeIce = onSnapshot(
     collection(roomRef, 'calleeCandidates'),
     (snapshot) => {
       //   console.log(snapshot);
@@ -142,11 +162,10 @@ async function createRoom() {
   );
 
   await peerConnection.setLocalDescription(offer);
-  await createVideo(localStream);
+  await createVideo(localStream, 'id-1');
 }
 
 async function joinRoom() {
-  const roomsRef = collection(db, `rooms`);
   const roomRef = doc(roomsRef, roomId.value);
   const roomSnapshot = await getDoc(roomRef);
 
@@ -178,11 +197,11 @@ async function joinRoom() {
     // Code for creating SDP answer below
     const offer = roomSnapshot.data().offer;
     await peerConnection.setRemoteDescription(offer);
-    await createVideo(remoteStream);
+    await createVideo(remoteStream, 'id-1');
 
     const answer = await peerConnection.createAnswer();
     await peerConnection.setLocalDescription(answer);
-    await createVideo(localStream);
+    await createVideo(localStream, 'id-2');
 
     const roomWithAnswer = {
       answer: {
@@ -194,7 +213,7 @@ async function joinRoom() {
     await setDoc(roomRef, roomWithAnswer);
 
     // Listening for remote ICE candidates below
-    const unsubCallerIce = onSnapshot(
+    unsubCallerIce = onSnapshot(
       collection(roomRef, 'callerCandidates'),
       (snapshot) => {
         console.log(snapshot);
@@ -224,54 +243,69 @@ async function openUserMedia(e) {
   localStream = stream;
 }
 
-async function createVideo(stream) {
+async function createVideo(stream, key) {
   videoList.push({
-    key: 1,
+    key: key,
   });
   // waiting for next refresh to access refs
   await nextTick();
   console.log(videoList.length, videoEls);
-  const playerEl = videoEls[videoList.length - 1];
+  const playerEl = videoEls[-1];
   playerEl.srcObject = stream;
   console.log('LOCAL STREAM:', localStream, 'VIDEO ELEMENT:', playerEl);
   return true;
 }
 
-async function destroyVideo(stream) {
+async function destroyVideo(key) {
+  videoList.splice(getVideoIndex(key), 1);
+  // const playerEl = videoEls[getVideoIndex(key)];
+  // playerEl.srcObject = null;
   return true;
 }
 
+function getVideoIndex(key) {
+  const k = videoList.findIndex((i) => i.key === key);
+  return k;
+}
+
 async function hangUp(e) {
-  const playerEl = videoList.value[0].videoPlayer;
-  const tracks = playerEl.srcObject.getTracks();
+  const tracks = localStream.getTracks();
   tracks.forEach((track) => {
     track.stop();
   });
-
+  // console.log(peerConnection.getReceivers());
   if (remoteStream) {
     remoteStream.getTracks().forEach((track) => track.stop());
   }
 
-  if (peerConnection) {
-    peerConnection.close();
+  // Delete room on hangup
+  // use dispatch and maybe delete complete collection
+  if (roomId.value) {
+    const roomRef = doc(roomsRef, roomId.value);
+    const calleeCandidates = await getDocs(
+      collection(roomRef, 'calleeCandidates')
+    );
+    calleeCandidates.forEach(async (candidate) => {
+      await deleteDoc(candidate.ref);
+    });
+    const callerCandidates = await getDocs(
+      collection(roomRef, 'callerCandidates')
+    );
+    callerCandidates.forEach(async (candidate) => {
+      await deleteDoc(candidate.ref);
+    });
+    await deleteDoc(roomRef);
   }
 
-  // Delete room on hangup // use_dispatch
-  if (roomId.value) {
-    const roomRef = collection(db, 'rooms').doc(roomId);
-    const calleeCandidates = await collection(db, 'calleeCandidates').get();
-    calleeCandidates.forEach(async (candidate) => {
-      await candidate.ref.delete();
-    });
-    const callerCandidates = await collection(
-      db,
-      'rooms/callerCandidates'
-    ).get();
-    callerCandidates.forEach(async (candidate) => {
-      await candidate.ref.delete();
-    });
-    await roomRef.delete();
+  const type = peerConnection.localDescription.type;
+  if (type === 'offer') {
+    unsubRemoteSd();
+    unsubCalleeIce();
+  } else if (type === 'answer') {
+    unsubCallerIce();
   }
+  peerConnection.close();
+  destroyVideo('id-1');
 }
 
 function registerPeerConnectionListeners() {
@@ -302,7 +336,7 @@ function registerPeerConnectionListeners() {
         peerConnection.close();
       }
 
-      destroyVideo();
+      destroyVideo('id-2');
     }
   });
 }
@@ -313,5 +347,9 @@ onBeforeUpdate(() => {
 
 onUpdated(() => {
   console.log('After updating', videoEls);
+});
+
+onBeforeUnmount(() => {
+  hangUp();
 });
 </script>

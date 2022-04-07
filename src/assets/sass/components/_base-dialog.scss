@@ -1,9 +1,11 @@
 .dialog {
   position: fixed;
   inset: 0 0 0 0;
+  z-index: 999;
   @include flexCenter;
 
   &__backdrop {
+    position: absolute;
     width: 100%;
     height: 100%;
     background-color: var(--color-black);
@@ -11,10 +13,22 @@
   }
 
   &__box {
-    position: absolute;
+    position: relative;
     overflow-y: auto;
     max-height: 85%;
     max-width: 95%;
+    width: 80rem;
     background: white;
+  }
+
+  &__close-btn {
+    cursor: pointer;
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+  }
+
+  &-header {
+    font-size: 1.2rem;
   }
 }

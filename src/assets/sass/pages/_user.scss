@@ -9,9 +9,9 @@
   }
 
   &__wrap {
+    width: 100%;
     border-radius: var(--border-radius-md);
     overflow: clip;
-    width: 60rem;
   }
 
   &__tabs {
@@ -39,9 +39,6 @@
   }
 
   &__form {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 3rem;
     border: var(--form-border);
     border-radius: inherit;
     border-top-left-radius: 0;
@@ -53,9 +50,8 @@
       font-weight: 700;
     }
 
-    input,
-    textarea {
-      width: 100%;
+    .submit-wrapper {
+      @include flexCenter
     }
   }
 }

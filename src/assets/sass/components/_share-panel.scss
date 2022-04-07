@@ -1,4 +1,4 @@
-.share-modal {
+.share-dialog {
   width: 80rem;
 
   &__header,
@@ -34,5 +34,8 @@
   }
 
   &__footer {
+    .text-verifier__value {
+      font-weight: 400;
+    }
   }
 }
