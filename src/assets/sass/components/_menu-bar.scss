@@ -1,0 +1,27 @@
+.menubar {
+  width: 28rem;
+
+  &__main {
+    list-style: none;
+    height: 30rem;
+    overflow-y: scroll;
+  }
+
+  &__item {
+    &:hover {
+      background-color: var(--color-tertiary);
+      color: var(--color-white);
+    }
+  }
+
+  &__link {
+    color: unset;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+
+    &:hover use {
+      fill: var(--color-white) !important;
+    }
+  }
+}

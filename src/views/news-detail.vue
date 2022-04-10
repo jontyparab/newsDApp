@@ -48,8 +48,13 @@
         </div>
         <div class="news-detail__info px-sm">
           <div class="news-detail__info--1 mb-xs">
-            <span>{{ news.date }}</span>
-            <span>{{ news.author }}</span>
+            <p>{{ formatNewsDate(news.date) }}</p>
+            <p class="ms-xs">
+              - By
+              <b>
+                <u>{{ news.author }}</u>
+              </b>
+            </p>
           </div>
 
           <!-- <div class="news-detail__info--2 ms-auto">
@@ -100,6 +105,7 @@ import { storeToRefs } from 'pinia';
 import { ref, reactive, toRefs, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useNewsStore } from '../stores/useNewsStore';
+import { formatNewsDate } from '@/assets/js/utils/formatters';
 
 const router = useRouter();
 

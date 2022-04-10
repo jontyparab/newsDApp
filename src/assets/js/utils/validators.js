@@ -1,4 +1,4 @@
-export const urlValidator = (s) => {
+const urlValidator = (s) => {
   try {
     new URL(s);
     return true;
@@ -6,3 +6,14 @@ export const urlValidator = (s) => {
     return false;
   }
 };
+
+const isoDateValidator = (d) => {
+  try {
+    new Date(d);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
+export { urlValidator, isoDateValidator };

@@ -145,19 +145,13 @@
       bottom: 0;
 
       &--1 {
-        & :nth-child(1) {
-          font-weight: 300;
-          display: block;
+        & > :nth-child(1) {
+          font-weight: 600;
           color: var(--color-grey-light-2);
         }
         & :nth-child(2) {
-          font-weight: 600;
+          font-weight: 300;
           color: var(--color-white);
-          display: block;
-          &::before {
-            font-weight: 300;
-            content: '- ';
-          }
         }
       }
       &--2 {

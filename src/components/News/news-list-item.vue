@@ -17,7 +17,7 @@
         </p>
       </div>
       <div class="news-list-item__meta">
-        <div class="news-list-item__meta--time">{{ date }}</div>
+        <div class="news-list-item__meta--time">{{ formatNewsDate(date) }}</div>
         <icon-button
           class="news-list-item__meta--bookmark"
           :icon="isBookmarked ? 'bookmark' : 'bookmark_border'"
@@ -31,7 +31,9 @@
 
 <script setup>
 import { toRefs } from 'vue';
-import { urlValidator } from '@/assets/js/utils/validators';
+import { urlValidator, isoDateValidator } from '@/assets/js/utils/validators';
+import { formatNewsDate } from '@/assets/js/utils/formatters';
+
 const props = defineProps({
   id: {
     type: String,
@@ -53,8 +55,11 @@ const props = defineProps({
     required: true,
   },
   date: {
-    type: Date,
+    type: String,
     required: true,
+    validator(value) {
+      return isoDateValidator(value);
+    },
   },
   isBookmarked: {
     type: Boolean,
@@ -86,7 +91,7 @@ const { id, imageUrl, headline, lead, date, isBookmarked } = toRefs(props);
     required: true,
   },
   date: {
-    type: Date,
+    type: String,
     required: true,
   },
   author: {

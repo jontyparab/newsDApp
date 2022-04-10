@@ -40,17 +40,12 @@
   &__link {
   }
 
-  .user-settings {
-    width: 30rem;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-
+  .user-options {
     .icon-button {
       &__svg {
+        height: 80%;
+        width: 80%;
         cursor: pointer;
-        height: 75%;
-        width: 75%;
       }
     }
   }
@@ -60,7 +55,6 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  width: 30rem;
   height: 4rem;
 
   &__img {

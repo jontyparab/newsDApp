@@ -11,7 +11,7 @@ export const useNewsStore = defineStore('news', {
           imageUrl: 'https://picsum.photos/id/1015/600/400',
           headline: 'Test headline',
           lead: 'Test lead',
-          date: new Date(),
+          date: new Date().toISOString(),
           author: 'John Snow',
           content: 'Test content',
           conclusion: 'Test conclusion',
@@ -20,11 +20,11 @@ export const useNewsStore = defineStore('news', {
           __typename: 'News',
         },
         {
-          id: 'vb23rd234fdsfsdferbertdg',
+          id: 'vsdf32490ssd',
           imageUrl: 'https://picsum.photos/id/1015/600/400',
           headline: 'Test headline',
           lead: 'Test lead',
-          date: new Date(),
+          date: new Date().toISOString(),
           author: 'John Snow',
           content: 'Test content',
           conclusion: 'Test conclusion',
@@ -33,7 +33,6 @@ export const useNewsStore = defineStore('news', {
           __typename: 'News',
         },
       ],
-      bookmarks: {},
     };
   },
   actions: {
@@ -42,9 +41,8 @@ export const useNewsStore = defineStore('news', {
       const news = this.getNewsById(id);
       try {
         if (isBookmarked) {
-          // const r = await axios.get(`/news/${id}.json`);
           const deletedBookmark = await axios.delete(
-            `/users/${userStore.walletId}/bookmarks.json`,
+            `/users/${userStore.userId}/bookmarks.json`,
             {
               equalTo: id,
             }
@@ -53,7 +51,7 @@ export const useNewsStore = defineStore('news', {
           news.isBookmarked = false;
         } else {
           const data = await axios.post(
-            `/users/${userStore.walletId}/bookmarks.json`,
+            `/users/${userStore.userId}/bookmarks.json`,
             id
           );
           console.log(data);

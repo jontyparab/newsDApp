@@ -23,14 +23,16 @@
 @import 'components/base-input-text';
 @import 'components/base-dialog';
 @import 'components/base-video';
+// home
+@import 'components/menu-bar';
+// news
+@import 'components/news-swiper';
 // other
 @import 'components/the-navigation-bar';
 @import 'components/icon-button';
 @import 'components/text-verifier';
 @import 'components/share-panel';
 @import 'components/tiptap-editor';
-// news
-@import 'components/news-swiper';
 
 // Pages
 @import 'pages/home';

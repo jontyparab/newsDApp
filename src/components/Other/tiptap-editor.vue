@@ -1,7 +1,7 @@
 <template>
   <div class="tiptap-editor">
-    <div v-if="editor" class="tiptap-editor__header-wrapper">
-      <div class="tiptap-editor__header">
+    <div v-if="editor" class="tiptap-editor__header">
+      <div class="tiptap-editor__header-inner">
         <icon-button
           :size="0.7"
           icon="bold"

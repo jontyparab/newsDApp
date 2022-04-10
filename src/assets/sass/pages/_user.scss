@@ -9,6 +9,7 @@
   }
 
   &__wrap {
+    max-width: 35rem;
     width: 100%;
     border-radius: var(--border-radius-md);
     overflow: clip;
@@ -38,7 +39,8 @@
     }
   }
 
-  &__form {
+  &__form,
+  &__mail-sent {
     border: var(--form-border);
     border-radius: inherit;
     border-top-left-radius: 0;
@@ -51,7 +53,16 @@
     }
 
     .submit-wrapper {
-      @include flexCenter
+      @include flexCenter;
+    }
+  }
+
+  &__mail-sent {
+    small {
+      display: block;
+      cursor: pointer;
+      font-size: 1.3rem;
+      font-weight: 600;
     }
   }
 }

@@ -1,13 +1,13 @@
 <template>
-  <nav class="navbar px-sm">
-    <router-link :to="{ name: 'NewsList' }" class="logo">
+  <nav class="navbar py-xs px-sm">
+    <router-link :to="{ name: 'NewsList' }" class="logo me-auto">
       <img
-        class="logo__img"
+        class="logo__img px-xs"
         src="@/assets/images/icons/logo.svg"
         alt="Logo Ipsum Company"
       />
     </router-link>
-    <ul class="navbar__nav-items">
+    <!-- <ul class="navbar__nav-items px-xs">
       <li class="navbar__nav-item is-active">All News</li>
       <li class="navbar__nav-item">Business</li>
       <li class="navbar__nav-item">Politics</li>
@@ -16,61 +16,124 @@
       <li class="navbar__nav-item">Sports</li>
       <li class="navbar__nav-item">Environment</li>
       <li class="navbar__nav-item">Weather</li>
-    </ul>
-    <router-link :to="{ name: 'NewsList' }" class="user-settings">
+    </ul> -->
+    <div class="user-options ms-auto">
       <icon-button
-        v-if="can('manage', 'User')"
+        v-if="isAuthenticated"
         icon="account-circle-fill"
         color="var(--color-secondary)"
+        @click="menus.menuBar = true"
       ></icon-button>
-    </router-link>
+      <base-button
+        v-else
+        class="px-sm py-xs bg-secondary text-white"
+        @click="router.push({ name: 'AuthForm' })"
+      >
+        Login
+      </base-button>
+    </div>
+    <menu-bar
+      v-if="menus.menuBar"
+      :item-list="menuOptions"
+      @close-menu="closeMenu('menuBar')"
+    ></menu-bar>
   </nav>
   <!-- <button @click="toggleDarkMode">TOGGLE</button> -->
 </template>
 
 <script setup>
+import { ref, reactive, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
+import { useAbility } from '../../assets/js/services/ability.js';
 import { useUserStore } from '@/stores/useUserStore.js';
+import { useRouter } from 'vue-router';
 import {
-  ability,
-  useAbility,
-  abilityBuilder,
-} from '../../assets/js/services/ability.js';
-
-const userStore = useUserStore();
-const { role } = storeToRefs(userStore);
+  enable as enableDarkMode,
+  disable as disableDarkMode,
+  // auto as followSystemColorScheme,
+  // exportGeneratedCSS as collectCSS,
+  isEnabled as isDarkReaderEnabled,
+} from 'darkreader';
 
 // for checking ability from template
 const { can } = useAbility();
 
-// setTimeout(() => {
-//   updateAbility();
-// }, 5000);
+const router = useRouter();
 
-// const updateAbility = () => {
-//   if (['admin'].includes(role.value)) {
-//     // for setting rules on ability
-//     const { can, rules } = ability;
-//     can('manage', 'User');
-//     ability.update(rules);
-//     console.log(rules);
-//   }
-// };
+const userStore = useUserStore();
+const { logout } = userStore;
+const { isAuthenticated } = storeToRefs(userStore);
 
-// import {
-//   enable as enableDarkMode,
-//   disable as disableDarkMode,
-//   auto as followSystemColorScheme,
-//   exportGeneratedCSS as collectCSS,
-//   isEnabled as isDarkReaderEnabled,
-// } from 'darkreader';
+const isMetamaskSupported = ref(false);
+const address = ref('');
 
-// function toggleDarkMode() {
-//   isDarkReaderEnabled()
-//     ? disableDarkMode()
-//     : enableDarkMode({
-//         brightness: 95,
-//         contrast: 95,
-//       });
-// }
+const menus = reactive({
+  menuBar: false,
+});
+
+const menuOptions = reactive([
+  {
+    icon: 'home',
+    name: 'Home',
+    to: { name: 'NewsList' },
+  },
+  {
+    icon: 'newspaper-line',
+    name: 'Publish Article',
+    to: { name: 'NewsForm' },
+  },
+  {
+    icon: 'folder-user-line',
+    name: 'My Articles',
+    to: { path: '' },
+  },
+  {
+    icon: 'wallet-3-line',
+    name: 'Connect',
+    to: { path: '' },
+    callback: connectWallet,
+  },
+  {
+    icon: 'moon-line',
+    name: 'Toggle Theme',
+    to: { path: '' },
+    callback: toggleDarkMode,
+  },
+  {
+    icon: 'logout-circle-line',
+    name: 'Sign Out',
+    to: { path: '' },
+    callback: logout,
+  },
+]);
+
+function toggleDarkMode() {
+  return isDarkReaderEnabled()
+    ? disableDarkMode()
+    : enableDarkMode({
+        brightness: 95,
+        contrast: 95,
+      });
+}
+
+async function connectWallet() {
+  try {
+    const accounts = await window.ethereum.request({
+      method: 'eth_requestAccounts',
+    });
+    address.value = accounts[0];
+    console.log(address.value);
+    menus.menuBar = false;
+  } catch (e) {
+    console.log('Fail to connect: ', e);
+  }
+}
+
+const closeMenu = (name) => {
+  menus[name] = false;
+};
+
+onMounted(() => {
+  isMetamaskSupported.value = typeof window.ethereum !== undefined;
+});
 </script>

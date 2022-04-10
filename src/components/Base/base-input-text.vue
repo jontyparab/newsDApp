@@ -1,5 +1,5 @@
 <template>
-  <div class="input-text__wrapper">
+  <div class="input-text">
     <component
       :is="inputTypeMap[inputType].tag"
       :type="inputTypeMap[inputType].type"
