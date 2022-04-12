@@ -7,17 +7,19 @@ import {
   signOut,
 } from 'firebase/auth';
 import fbApp from '@/assets/js/services/firebase.js';
-import axios from '@/assets/js/services/axios';
+import { fbAxios } from '@/assets/js/services/axios';
 import router from '@/router/index';
 import {
+  // check
   ability,
+  // set
   abilityBuilder,
-  CAN,
-  CANNOT,
 } from '@/assets/js/services/ability.js';
 
 const auth = getAuth(fbApp);
 let timer = null;
+
+const { can, cannot, rules } = abilityBuilder;
 
 export const useUserStore = defineStore('user', {
   state: () => {
@@ -29,8 +31,11 @@ export const useUserStore = defineStore('user', {
       bookmarks: {},
       // app local data
       accessToken: '',
-      isMetaMaskConnected: false,
-      isAuthenticated: false,
+      // isMetaMaskConnected: false,
+      // isAuthenticated: false,
+      isJournalist: false,
+      kycId: '',
+      isVerifiedJournalist: false,
       __typename: 'User',
     };
   },
@@ -92,7 +97,6 @@ export const useUserStore = defineStore('user', {
             this.$patch({
               userId: uid,
               accessToken,
-              isAuthenticated: true,
             });
 
             /* Auto login setup */
@@ -125,7 +129,7 @@ export const useUserStore = defineStore('user', {
       }
     },
     logout(redirect = false) {
-      if (this.isAuthenticated) {
+      if (ability.can('authenticated')) {
         signOut(auth)
           .then(() => {
             this.$reset();
@@ -136,7 +140,7 @@ export const useUserStore = defineStore('user', {
             localStorage.removeItem('tokenExpiration');
             clearTimeout(timer);
 
-            CANNOT('bookmark', 'News');
+            ability.update([]);
 
             if (redirect) {
               router.push({ name: 'AuthForm' });
@@ -149,7 +153,7 @@ export const useUserStore = defineStore('user', {
       }
     },
     tryLogin() {
-      if (!this.isAuthenticated) {
+      if (ability.cannot('authenticated')) {
         const accessToken = localStorage.getItem('accessToken');
         const userId = localStorage.getItem('userId');
         const tokenExpiration = localStorage.getItem('tokenExpiration');
@@ -173,21 +177,41 @@ export const useUserStore = defineStore('user', {
 
     async getOrCreateUser(user) {
       try {
-        let data = await axios.get(`/users/${this.userId}/.json`);
+        let data = await fbAxios.get(`/users/${this.userId}/.json`);
         if (!data.data) {
-          data = await axios.put(`/users/${this.userId}/.json`, user);
+          data = await fbAxios.put(`/users/${this.userId}/.json`, user);
         }
         // Update state
         this.$patch({
           ...data.data,
-          isAuthenticated: true,
         });
-        if (this.isAuthenticated && this.accessToken && this.userId) {
-          CAN('bookmark', 'News');
+        can('authenticated');
+        if (this.isJournalist) {
+          can('manage', 'News');
         }
+        ability.update(rules);
         // router.push({ name: 'NewsList' });
       } catch (error) {
         console.error('Error getOrCreateUser: ', error);
+      }
+    },
+
+    async registerJournalist(kycInfo) {
+      console.log(kycInfo);
+      // TODO: this should be done from admin panel
+      kycInfo.verificationId = Date.getTime();
+      try {
+        let kycData = await fbAxios.post(`/kyc/${this.userId}/.json`, kycInfo);
+        let updatedUserData = await fbAxios.patch(
+          `/users/${this.userId}/.json`,
+          {
+            kycId: kycData.id,
+            isVerifiedJournalist: true,
+          }
+        );
+        this.isVerifiedJournalist = updatedUserData?.true;
+      } catch (e) {
+        console.log('Error registerJournalist:');
       }
     },
   },

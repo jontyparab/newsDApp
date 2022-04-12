@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { useUserStore } from './useUserStore';
-import axios from '@/assets/js/services/axios';
+import { fbAxios } from '@/assets/js/services/axios';
 
 export const useNewsStore = defineStore('news', {
   state: () => {
@@ -41,7 +41,7 @@ export const useNewsStore = defineStore('news', {
       const news = this.getNewsById(id);
       try {
         if (isBookmarked) {
-          const deletedBookmark = await axios.delete(
+          const deletedBookmark = await fbAxios.delete(
             `/users/${userStore.userId}/bookmarks.json`,
             {
               equalTo: id,
@@ -50,7 +50,7 @@ export const useNewsStore = defineStore('news', {
           console.log(deletedBookmark);
           news.isBookmarked = false;
         } else {
-          const data = await axios.post(
+          const data = await fbAxios.post(
             `/users/${userStore.userId}/bookmarks.json`,
             id
           );
@@ -60,6 +60,9 @@ export const useNewsStore = defineStore('news', {
       } catch (error) {
         console.error('Error bookmarking: ', error);
       }
+    },
+    async createNews(news) {
+      // TODO: update blockchain as well as news node in firebase
     },
   },
   getters: {

@@ -51,10 +51,6 @@
       color: var(--color-grey-dark-2);
       font-weight: 700;
     }
-
-    .submit-wrapper {
-      @include flexCenter;
-    }
   }
 
   &__mail-sent {
@@ -65,4 +61,9 @@
       font-weight: 600;
     }
   }
+}
+
+// Submit wrapper for all forms
+.submit-wrapper {
+  @include flexCenter;
 }

@@ -2,7 +2,19 @@
   <div class="container">
     <div class="news__form">
       <h1 class="mb-sm">News Article</h1>
-      <FormKitSchema :schema="schema" :library="library"></FormKitSchema>
+      <FormKit
+        type="form"
+        name="newsForm"
+        incomplete-message="Please fill all required sections."
+        submit-label="Post Article"
+        :submit-attrs="{
+          wrapperClass: 'submit-wrapper mt-sm',
+        }"
+        @node="setNode"
+        @submit="submitForm"
+      >
+        <FormKitSchema :schema="schema" :library="library"></FormKitSchema>
+      </FormKit>
     </div>
   </div>
 </template>
@@ -10,8 +22,16 @@
 import { FormKitSchema } from '@formkit/vue';
 import TiptapEditor from '../components/Other/tiptap-editor.vue';
 import { markRaw } from 'vue';
+import { useNewsStore } from '@/stores/useNewsStore';
+import { useMainStore } from '@/stores/useMainStore';
+import { reactive } from 'vue';
 // import TinymceEditor from '../components/Other/tinymce-editor.vue';
 // headline, $author, $date, $id, image, lead paragraph, content(rich text), conclusion,
+
+const newsStore = useNewsStore();
+const mainStore = useMainStore();
+const { createNews } = newsStore;
+const { uploadIpfsFile } = mainStore;
 
 const library = markRaw({
   editor: TiptapEditor,
@@ -39,8 +59,8 @@ const schema = [
     $formkit: 'file',
     name: 'image',
     label: 'Image',
+    validation: [['required']],
     accept: '.jpg,.png,.webp',
-    help: '(Optional)',
   },
   {
     $cmp: 'editor',
@@ -65,4 +85,14 @@ const schema = [
     help: '(Optional)',
   },
 ];
+
+let newsForm;
+const setNode = (n) => {
+  newsForm = n;
+};
+
+async function submitForm() {
+  const { url } = await uploadIpfsFile();
+  await createNews({ ...newsForm.value, url });
+}
 </script>

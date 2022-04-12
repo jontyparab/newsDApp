@@ -6,7 +6,11 @@
       </div>
     </template>
     <menu class="menubar__main">
-      <li v-for="item of itemList" :key="item.name" class="menubar__item p-xs">
+      <li
+        v-for="item of filteredMenuList"
+        :key="item.name"
+        class="menubar__item p-xs"
+      >
         <router-link
           class="menubar__link"
           :to="item.to"
@@ -25,7 +29,7 @@
 </template>
 
 <script setup>
-import { toRefs } from 'vue';
+import { toRefs, computed } from 'vue';
 
 const props = defineProps({
   options: {
@@ -41,7 +45,15 @@ const props = defineProps({
   },
 });
 
+const { itemList } = toRefs(props);
 const emits = defineEmits(['close-menu']);
+
+const filteredMenuList = computed(() => {
+  return itemList.value.filter((item) => {
+    console.log(!item.condition);
+    return !item.condition;
+  });
+});
 
 function executeCallback(fn) {
   if (fn instanceof Function) {
@@ -55,6 +67,4 @@ function emitCloseMenu() {
   // not sure though
   emits('close-menu');
 }
-
-const { itemList } = toRefs(props);
 </script>

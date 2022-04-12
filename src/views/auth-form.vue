@@ -60,7 +60,7 @@
             :preserve="true"
           /> -->
         </FormKit>
-        <div v-else class="auth__mail-sent submit-wrapper p-sm">
+        <div v-else class="auth__mail-sent p-sm">
           <p>
             Go to your <b>inbox</b> (or spam) and click the link to log into
             your account.

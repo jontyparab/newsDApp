@@ -9,6 +9,7 @@ const routes = [
     path: '/',
     name: 'HomePage',
     component: HomePage,
+    redirect: { name: 'NewsList' },
   },
 ]
   .concat(newsRoutes)

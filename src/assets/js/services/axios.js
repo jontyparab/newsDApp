@@ -17,11 +17,18 @@ A document cannot have a *direct* child document.
 //     key: firebaseConfig.apiKey,
 //   },
 // });
-export default axios.create({
+export const fbAxios = axios.create({
   baseURL: `https://news-dapp-default-rtdb.firebaseio.com/`,
   headers: {
     'Content-Type': 'application/json',
   },
+  params: {
+    key: firebaseConfig.apiKey,
+  },
+});
+
+export const nodeAxios = axios.create({
+  baseURL: `https://eth-jashan.uk/`,
   params: {
     key: firebaseConfig.apiKey,
   },

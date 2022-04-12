@@ -19,7 +19,7 @@
     </ul> -->
     <div class="user-options ms-auto">
       <icon-button
-        v-if="isAuthenticated"
+        v-if="can('authenticated')"
         icon="account-circle-fill"
         color="var(--color-secondary)"
         @click="menus.menuBar = true"
@@ -42,35 +42,45 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, watchEffect } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useAbility } from '../../assets/js/services/ability.js';
+import {
+  ability,
+  useAbility,
+  abilityBuilder,
+} from '@/assets/js/services/ability.js';
 import { useUserStore } from '@/stores/useUserStore.js';
 import { useRouter } from 'vue-router';
-import {
-  enable as enableDarkMode,
-  disable as disableDarkMode,
-  // auto as followSystemColorScheme,
-  // exportGeneratedCSS as collectCSS,
-  isEnabled as isDarkReaderEnabled,
-} from 'darkreader';
+// import {
+//   enable as enableDarkMode,
+//   disable as disableDarkMode,
+//   // auto as followSystemColorScheme,
+//   // exportGeneratedCSS as collectCSS,
+//   isEnabled as isDarkReaderEnabled,
+// } from 'darkreader';
 
 // for checking ability from template
-const { can } = useAbility();
+const { can, cannot } = useAbility();
+
+// console.log(can('manage', 'News'));
+// setTimeout(() => {
+//   console.log(can('manage', 'News'));
+// }, 2000);
 
 const router = useRouter();
 
 const userStore = useUserStore();
 const { logout } = userStore;
-const { isAuthenticated } = storeToRefs(userStore);
+// const {  } = storeToRefs(userStore);
 
 const isMetamaskSupported = ref(false);
-const address = ref('');
+const address = ref(false);
 
 const menus = reactive({
   menuBar: false,
 });
 
+// watch properties from store
 const menuOptions = reactive([
   {
     icon: 'home',
@@ -78,43 +88,54 @@ const menuOptions = reactive([
     to: { name: 'NewsList' },
   },
   {
+    icon: 'wallet-3-line',
+    name: 'Connect Wallet',
+    to: { path: '' },
+    callback: connectWallet,
+    condition: can('authenticated'),
+  },
+  {
+    icon: 'user-star-line',
+    name: 'Join as a Journalist',
+    to: { name: 'JournalistRegisterForm' },
+    condition: can('manage', 'News'),
+  },
+  {
     icon: 'newspaper-line',
     name: 'Publish Article',
     to: { name: 'NewsForm' },
+    condition: can('manage', 'News'),
   },
   {
     icon: 'folder-user-line',
     name: 'My Articles',
     to: { path: '' },
+    condition: can('manage', 'News'),
   },
-  {
-    icon: 'wallet-3-line',
-    name: 'Connect',
-    to: { path: '' },
-    callback: connectWallet,
-  },
-  {
-    icon: 'moon-line',
-    name: 'Toggle Theme',
-    to: { path: '' },
-    callback: toggleDarkMode,
-  },
+  // {
+  //   icon: 'moon-line',
+  //   name: 'Toggle Theme',
+  //   to: { path: '' },
+  //   callback: toggleDarkMode,
+  //   condition: can('authenticated'),
+  // },
   {
     icon: 'logout-circle-line',
     name: 'Sign Out',
     to: { path: '' },
     callback: logout,
+    condition: can('authenticated'),
   },
 ]);
 
-function toggleDarkMode() {
-  return isDarkReaderEnabled()
-    ? disableDarkMode()
-    : enableDarkMode({
-        brightness: 95,
-        contrast: 95,
-      });
-}
+// function toggleDarkMode() {
+//   return isDarkReaderEnabled()
+//     ? disableDarkMode()
+//     : enableDarkMode({
+//         brightness: 95,
+//         contrast: 95,
+//       });
+// }
 
 async function connectWallet() {
   try {
