@@ -24,18 +24,25 @@ const { can, cannot, rules } = abilityBuilder;
 export const useUserStore = defineStore('user', {
   state: () => {
     return {
+      /* For all users */
       userId: '',
       email: '',
-      fullName: '',
-      roles: {},
       bookmarks: {},
+      roles: {},
+
+      /* For journalists */
+      kycId: '',
+      isJournalist: true,
+      firstName: '',
+      lastName: '',
+      about: '',
+      subjectsOfInterest: '',
+      isVerifiedJournalist: false,
+
       // app local data
       accessToken: '',
       // isMetaMaskConnected: false,
       // isAuthenticated: false,
-      isJournalist: false,
-      kycId: '',
-      isVerifiedJournalist: false,
       __typename: 'User',
     };
   },
@@ -186,7 +193,7 @@ export const useUserStore = defineStore('user', {
           ...data.data,
         });
         can('authenticated');
-        if (this.isJournalist) {
+        if (this.isJournalist && this.isVerifiedJournalist) {
           can('manage', 'News');
         }
         ability.update(rules);
@@ -196,20 +203,41 @@ export const useUserStore = defineStore('user', {
       }
     },
 
-    async registerJournalist(kycInfo) {
-      console.log(kycInfo);
-      // TODO: this should be done from admin panel
-      kycInfo.verificationId = Date.getTime();
+    async getWalletAccounts() {
       try {
-        let kycData = await fbAxios.post(`/kyc/${this.userId}/.json`, kycInfo);
-        let updatedUserData = await fbAxios.patch(
+        const accounts = await window.ethereum.request({
+          method: 'eth_requestAccounts',
+        });
+        can('connected', 'wallet');
+        ability.update(rules);
+        return accounts;
+      } catch (e) {
+        console.log('Error getWalletAccounts: ');
+      }
+    },
+
+    async registerJournalist(formData) {
+      // TODO: this should be done from admin panel
+      formData.verificationId = crypto.randomUUID();
+      const { about, subjectsOfInterest, ...kycData } = formData;
+      try {
+        let { data: resData } = await fbAxios.put(
+          `/kyc/${this.userId}/.json`,
+          kycData
+        );
+        console.log();
+        let { data: updatedUserData } = await fbAxios.patch(
           `/users/${this.userId}/.json`,
           {
-            kycId: kycData.id,
+            firstName: resData.firstName,
+            lastName: resData.lastName,
+            about,
+            subjectsOfInterest,
             isVerifiedJournalist: true,
+            verificationId: resData.verificationId,
           }
         );
-        this.isVerifiedJournalist = updatedUserData?.true;
+        this.$patch(updatedUserData);
       } catch (e) {
         console.log('Error registerJournalist:');
       }

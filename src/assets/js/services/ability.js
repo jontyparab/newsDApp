@@ -6,7 +6,9 @@ CASL uses can and cannot function names to both define and check permissions. Fo
 */
 const abilityBuilder = new AbilityBuilder(Ability);
 // defines abilities
-const { can: allow, cannot: forbid, rules, build } = abilityBuilder;
+const { can, cannot, rules, build } = abilityBuilder;
+
+can('default');
 
 const ability = build({
   detectSubjectType: (object) => object.__typename,

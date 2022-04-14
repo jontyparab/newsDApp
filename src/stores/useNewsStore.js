@@ -63,6 +63,7 @@ export const useNewsStore = defineStore('news', {
     },
     async createNews(news) {
       // TODO: update blockchain as well as news node in firebase
+      console.log(news);
     },
   },
   getters: {

@@ -22,8 +22,10 @@
 import { FormKitSchema } from '@formkit/vue';
 import { useUserStore } from '@/stores/useUserStore';
 import { useMainStore } from '@/stores/useMainStore';
+import { useRouter } from 'vue-router';
 import { reactive } from 'vue';
 
+const router = useRouter();
 const userStore = useUserStore();
 const mainStore = useMainStore();
 const { registerJournalist } = userStore;
@@ -50,14 +52,14 @@ const schema = [
     validation: [['required']],
     help: 'Example: Aadhar card, driving license, PAN card etc.',
   },
-  // {
-  //   $formkit: 'file',
-  //   name: 'video',
-  //   label: 'Video',
-  //   accept: '.mp4, .webm, .avi',
-  //   // validation: [['required']],
-  //   help: 'Upload a short video (2-3 minutes) specifying your full name, age, birth date. Hold your photo identity such that it is clearly visible in the video.',
-  // },
+  {
+    $formkit: 'file',
+    name: 'video',
+    label: 'Video',
+    accept: '.mp4, .webm, .avi',
+    // validation: [['required']],
+    help: 'Upload a short video (2-3 minutes) specifying your full name, age, birth date. Hold your photo identity such that it is clearly visible in the video.',
+  },
   {
     $formkit: 'textarea',
     name: 'about',
@@ -79,7 +81,25 @@ const setNode = (n) => {
 };
 
 async function submitForm() {
-  const { url } = await uploadFbFile();
-  await registerJournalist({ ...journalistRegisterForm.value, url });
+  const photoIdentityUrls = await uploadFbFile(
+    journalistRegisterForm.value.photoIdentity,
+    '/kyc/photoIdentities'
+  );
+  const videoUrls = await uploadFbFile(
+    journalistRegisterForm.value.video,
+    '/kyc/videos'
+  );
+  // eslint-disable-next-line no-unused-vars
+  const requiredData = (({ photoIdentity, video, ...o }) => o)(
+    journalistRegisterForm.value
+  );
+  Object.assign(requiredData, { photoIdentityUrls, videoUrls });
+  try {
+    await registerJournalist(requiredData);
+    router.push({ name: 'NewsList' });
+    // TODO: allow journalist to manage news permission in CASL
+  } catch (e) {
+    console.log(e);
+  }
 }
 </script>
