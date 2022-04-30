@@ -7,10 +7,8 @@
     </template>
     <menu class="menubar__main">
       <template v-for="item of itemList" :key="item.name">
-        <li
-          v-if="item.conditions?.every((c) => can(...c))"
-          class="menubar__item p-xs"
-        >
+        <!-- v-if="item.conditions?.every((c) => can(...c))" -->
+        <li v-if="item.conditions?.call()" class="menubar__item p-xs">
           <router-link
             class="menubar__link"
             :to="item.to"
@@ -31,7 +29,6 @@
 
 <script setup>
 import { toRefs } from 'vue';
-import { useAbility } from '@/assets/js/services/ability.js';
 
 const props = defineProps({
   options: {
@@ -49,8 +46,6 @@ const props = defineProps({
 
 const { itemList } = toRefs(props);
 const emits = defineEmits(['close-menu']);
-
-const { can } = useAbility();
 
 function executeCallback(fn) {
   if (fn instanceof Function) {

@@ -1,10 +1,6 @@
 <template>
-  <router-link
-    v-slot="{ navigate }"
-    :to="{ name: 'NewsDetail', params: { id } }"
-    custom
-  >
-    <article class="news-list-item my-xs p-sm" role="link" @click="navigate">
+  
+    <article class="news-list-item my-xs p-sm" role="link">
       <div class="news-list-item__image-wrap">
         <img :src="imageUrl" alt="" class="news-list-item__image" />
       </div>
@@ -26,7 +22,6 @@
         ></icon-button>
       </div>
     </article>
-  </router-link>
 </template>
 
 <script setup>

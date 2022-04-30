@@ -28,8 +28,5 @@ export const fbAxios = axios.create({
 });
 
 export const nodeAxios = axios.create({
-  baseURL: `https://eth-jashan.uk/`,
-  params: {
-    key: firebaseConfig.apiKey,
-  },
+  baseURL: `http://localhost:3002/`,
 });

@@ -167,8 +167,9 @@
     <editor-content :editor="editor" />
     <div class="tiptap-editor__footer">
       <div v-if="editor" class="tiptap-editor__footer--character-count">
-        {{ editor.storage.characterCount.characters() }}/{{ limit }} characters
-        ({{ editor.storage.characterCount.words() }} words)
+        {{ editor.storage.characterCount.characters() }}/
+        {{ context.limit }}
+        characters ({{ editor.storage.characterCount.words() }} words)
       </div>
     </div>
   </div>
@@ -191,19 +192,28 @@ import Gapcursor from '@tiptap/extension-gapcursor';
 import History from '@tiptap/extension-history';
 import CharacterCount from '@tiptap/extension-character-count';
 import Placeholder from '@tiptap/extension-placeholder';
+import sanitizeHtml from 'sanitize-html';
 
 const props = defineProps({
-  limit: {
-    type: Number,
+  // limit: {
+  //   type: Number,
+  //   required: false,
+  //   default: 500,
+  // },
+  // placeholder: {
+  //   type: String,
+  //   required: false,
+  //   default: 'Write something...',
+  // },
+  context: {
+    type: Object,
     required: false,
-    default: 500,
-  },
-  placeholder: {
-    type: String,
-    required: false,
-    default: 'Write something...',
+    default: () => {},
   },
 });
+
+const emits = defineEmits(['update']);
+
 const editor = new Editor({
   editorProps: {
     attributes: {
@@ -220,10 +230,10 @@ const editor = new Editor({
     Bold,
     Italic,
     CharacterCount.configure({
-      limit: props.limit,
+      limit: props.context.limit,
     }),
     Placeholder.configure({
-      placeholder: props.placeholder,
+      placeholder: props.context.placeholder,
     }),
     Dropcursor,
     Gapcursor,
@@ -239,7 +249,20 @@ const editor = new Editor({
   //     `,
 });
 
+const updateContent = ({ editor }) => {
+  const cleanValue = sanitizeHtml(editor.getHTML(), {
+    allowedTags: ['em', 'strong', 'hr', 'p', 'br'],
+    selfClosing: ['hr', 'br'],
+    allowProtocolRelative: false,
+  });
+  props?.context.node.input(cleanValue);
+  emits('update', cleanValue);
+};
+
+editor.on('update', updateContent);
+
 onBeforeUnmount(() => {
+  editor.off('update', updateContent);
   editor.destroy();
 });
 </script>

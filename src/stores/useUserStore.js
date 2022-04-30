@@ -14,6 +14,7 @@ import {
   ability,
   // set
   abilityBuilder,
+  defineAbilitiesFor,
 } from '@/assets/js/services/ability.js';
 
 const auth = getAuth(fbApp);
@@ -28,16 +29,17 @@ export const useUserStore = defineStore('user', {
       userId: '',
       email: '',
       bookmarks: {},
-      roles: {},
 
       /* For journalists */
       kycId: '',
-      isJournalist: true,
+      isJournalist: false,
+      journalistId: '1',
+      isVerifiedJournalist: false,
       firstName: '',
       lastName: '',
       about: '',
       subjectsOfInterest: '',
-      isVerifiedJournalist: false,
+      verificationId: '',
 
       // app local data
       accessToken: '',
@@ -95,7 +97,7 @@ export const useUserStore = defineStore('user', {
           .then((result) => {
             // Clear email from storage.
             console.log('Removed email from local storage.');
-            window.localStorage.removeItem('emailForSignIn');
+            // window.localStorage.removeItem('emailForSignIn');
 
             const {
               user: { accessToken, email, uid },
@@ -147,7 +149,9 @@ export const useUserStore = defineStore('user', {
             localStorage.removeItem('tokenExpiration');
             clearTimeout(timer);
 
-            ability.update([]);
+            // permissions
+            const { rules: r } = defineAbilitiesFor('anyone');
+            ability.update(r);
 
             if (redirect) {
               router.push({ name: 'AuthForm' });
@@ -192,11 +196,21 @@ export const useUserStore = defineStore('user', {
         this.$patch({
           ...data.data,
         });
+
+        // permissions
         can('authenticated');
+
         if (this.isJournalist && this.isVerifiedJournalist) {
+          console.log('ran getorcreate');
           can('manage', 'News');
         }
         ability.update(rules);
+
+        // setTimeout(() => {
+        //   can('manage', 'News');
+        //   ability.update(rules);
+        // }, 4000);
+
         // router.push({ name: 'NewsList' });
       } catch (error) {
         console.error('Error getOrCreateUser: ', error);
@@ -208,8 +222,10 @@ export const useUserStore = defineStore('user', {
         const accounts = await window.ethereum.request({
           method: 'eth_requestAccounts',
         });
-        can('connected', 'wallet');
-        ability.update(rules);
+        if (accounts.length > 0) {
+          can('connected', 'Wallet');
+          ability.update(rules);
+        }
         return accounts;
       } catch (e) {
         console.log('Error getWalletAccounts: ');
@@ -225,7 +241,6 @@ export const useUserStore = defineStore('user', {
           `/kyc/${this.userId}/.json`,
           kycData
         );
-        console.log();
         let { data: updatedUserData } = await fbAxios.patch(
           `/users/${this.userId}/.json`,
           {
@@ -233,15 +248,23 @@ export const useUserStore = defineStore('user', {
             lastName: resData.lastName,
             about,
             subjectsOfInterest,
+            isJournalist: true,
             isVerifiedJournalist: true,
             verificationId: resData.verificationId,
           }
         );
         this.$patch(updatedUserData);
+        // permissions
+        if (this.isJournalist && this.isVerifiedJournalist) {
+          can('manage', 'News');
+          ability.update(rules);
+        }
       } catch (e) {
         console.log('Error registerJournalist:');
       }
     },
   },
-  getters: {},
+  getters: {
+    getFullName: (state) => `${state.firstName} ${state.lastName}`,
+  },
 });

@@ -146,11 +146,11 @@
 
       &--1 {
         & > :nth-child(1) {
-          font-weight: 600;
+          font-weight: 400;
           color: var(--color-grey-light-2);
         }
         & :nth-child(2) {
-          font-weight: 300;
+          font-weight: 200;
           color: var(--color-white);
         }
       }
@@ -174,8 +174,45 @@
       font-weight: 300;
       font-size: 1.5rem;
 
-      &--para {
+      p {
         margin-bottom: 2.5rem;
+      }
+    }
+  }
+
+  &-owned-list {
+    &__wrapper {
+    }
+
+    &__tabs {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      font-size: 1.2rem;
+      width: 100%;
+      overflow: scroll;
+
+      & > * {
+        flex: 1 1 0; // equivalent to flex: 1;
+        text-align: center;
+        color: var(--color-grey-dark-3);
+        cursor: pointer;
+        user-select: none;
+        white-space: nowrap;
+        margin: 0 0.9rem;
+        padding: 0.4rem 0;
+        font-weight: 400;
+
+        &.is-active {
+          border-radius: var(--border-radius-sm);
+          border-bottom: solid 3px var(--color-secondary);
+          color: var(--color-secondary);
+          font-weight: 500;
+        }
+      }
+
+      *:not(:last-child) {
+        // border-right: solid 2px var(--color-grey-light-3);
       }
     }
   }

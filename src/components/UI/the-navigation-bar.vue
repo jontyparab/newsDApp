@@ -54,14 +54,10 @@ import {
   // exportGeneratedCSS as collectCSS,
   isEnabled as isDarkReaderEnabled,
 } from 'darkreader';
+import { isThisSecond } from 'date-fns';
 
 // for checking ability from template
-const { can } = useAbility();
-
-// console.log(can('manage', 'News'));
-// setTimeout(() => {
-//   console.log(can('manage', 'News'));
-// }, 2000);
+const { can, cannot } = useAbility();
 
 const router = useRouter();
 
@@ -70,7 +66,6 @@ const { logout, getWalletAccounts } = userStore;
 // const {  } = storeToRefs(userStore);
 
 const isMetamaskSupported = ref(false);
-const address = ref(false);
 
 const menus = reactive({
   menuBar: false,
@@ -80,6 +75,9 @@ const menus = reactive({
 `can` function does not provide latest values if you pass as prop. 
 computed, watcher nothing seems to work.
 Hence we just pass the conditions and check in child component.
+AND
+Since computed properties execute only when their reactive dependencies
+change and since ability is not really reactive, we just make do with a method.
 */
 
 const menuOptions = reactive([
@@ -87,46 +85,62 @@ const menuOptions = reactive([
     icon: 'home',
     name: 'Home',
     to: { name: 'NewsList' },
-    conditions: [['default']],
+    conditions: () => {
+      return can('read', 'News');
+    },
   },
   {
     icon: 'wallet-3-line',
     name: 'Connect Wallet',
     to: { path: '' },
     callback: connectWallet,
-    conditions: [['authenticated']],
+    conditions: () => {
+      const checks = [can('authenticated'), cannot('connected', 'Wallet')];
+      return !checks.includes(false);
+    },
   },
   {
     icon: 'user-star-line',
     name: 'Join as a Journalist',
     to: { name: 'JournalistRegisterForm' },
-    conditions: [['manage', 'News']],
+    conditions: () => {
+      const checks = [can('authenticated'), cannot('manage', 'News')];
+      return !checks.includes(false);
+    },
   },
   {
     icon: 'newspaper-line',
     name: 'Publish Article',
     to: { name: 'NewsForm' },
-    conditions: [['manage', 'News']],
+    conditions: () => {
+      return can('manage', 'News');
+    },
   },
   {
     icon: 'folder-user-line',
     name: 'My Articles',
-    to: { path: '' },
-    conditions: [['manage', 'News']],
+    to: { name: 'NewsOwnedList' },
+    conditions: () => {
+      return can('manage', 'News');
+    },
   },
   {
-    icon: 'moon-line',
+    icon: 'paint-brush-drawing',
     name: 'Toggle Theme',
     to: { path: '' },
     callback: toggleDarkMode,
-    conditions: [['authenticated']],
+    conditions: () => {
+      return can('authenticated');
+    },
   },
   {
     icon: 'logout-circle-line',
     name: 'Sign Out',
     to: { path: '' },
     callback: logout,
-    conditions: [['authenticated']],
+    conditions: () => {
+      return can('authenticated');
+    },
   },
 ]);
 

@@ -1,11 +1,15 @@
-import { formatDistanceToNow, parseISO, format } from 'date-fns';
+import { formatDistanceToNow, parseISO, format, parse } from 'date-fns';
 
 // const formatNewsDate = (date) => {
 //   return formatDistanceToNow(parseISO(date));
 // };
 
 const formatNewsDate = (date) => {
-  return format(parseISO(date), 'LLLL d, yyyy');
+  try {
+    return format(parseISO(date), 'LLLL d, yyyy');
+  } catch (error) {
+    return date;
+  }
 };
 
 export { formatNewsDate };

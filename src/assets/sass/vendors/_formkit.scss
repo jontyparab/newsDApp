@@ -933,3 +933,7 @@ input[type='radio'].formkit-input ~ .formkit-decorator::before {
   min-height: 6em;
   flex-grow: 1;
 }
+// Custom
+.formkit-editor .formkit-inner {
+  box-shadow: none;
+}
