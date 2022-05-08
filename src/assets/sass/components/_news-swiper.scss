@@ -24,7 +24,7 @@
     max-height: inherit;
     object-fit: cover;
     border-radius: inherit;
-    filter: brightness(75%);
+    filter: brightness(90%);
   }
 
   .news-swiper__overlay {
@@ -33,7 +33,7 @@
     background: linear-gradient(
       var(--color-black),
       transparent 15%,
-      transparent 50%,
+      transparent 75%,
       var(--color-black) 100%
     );
     border-radius: inherit;
@@ -48,6 +48,10 @@
     top: 0;
 
     &--time {
+    }
+
+    .icon-button {
+      cursor: pointer;
     }
   }
 

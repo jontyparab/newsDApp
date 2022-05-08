@@ -1,14 +1,14 @@
 <template>
-  <base-dialog class="share-modal p-sm">
+  <base-dialog class="share-dialog p-sm">
     <template #header>
-      <div class="share-modal__header mb-sm">
-        <span>Share</span>
+      <div class="dialog-header mb-sm">
+        <h2>Share</h2>
       </div>
     </template>
     <template #default>
       <div
         v-dragscroll:nochilddrag="true"
-        class="share-modal__body py-xs mb-sm"
+        class="share-dialog__body py-xs mb-sm"
       >
         <share-network
           v-for="network in networks"
@@ -17,7 +17,7 @@
           :style="{ backgroundColor: network.color }"
           v-bind="sharing"
           tag="span"
-          class="share-modal__network m-xs"
+          class="share-dialog__network m-xs"
         >
           <!-- <icon-button
             icon="share"
@@ -31,10 +31,10 @@
       </div>
     </template>
     <template #footer>
-      <div class="share-modal__footer pt-sm">
+      <div class="share-dialog__footer pt-sm">
         <span>Link</span>
         <text-verifier
-          true-value="123123"
+          :true-value="sharing.url"
           :fields="['valueField']"
         ></text-verifier>
       </div>
@@ -43,18 +43,26 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, toRefs } from 'vue';
 
-const sharing = ref({
-  url: 'https://news.vuejs.org/issues/180',
-  title:
-    'Say hi to Vite! A brand new, extremely fast development setup for Vue.',
-  description:
-    'This week, I\'d like to introduce you to "Vite", which means "Fast". It\'s a brand new development setup created by Evan You.',
-  quote: "The hot reload is so fast it's near instant. - Evan You",
-  hashtags: 'vuejs,vite,javascript',
-  twitterUser: 'youyuxi',
+const props = defineProps({
+  sharing: {
+    type: Object,
+    required: true,
+  },
 });
+
+const { sharing } = toRefs(props);
+// const sharing = ref({
+//   url: 'https://news.vuejs.org/issues/180',
+//   title:
+//     'Say hi to Vite! A brand new, extremely fast development setup for Vue.',
+//   description:
+//     'This week, I\'d like to introduce you to "Vite", which means "Fast". It\'s a brand new development setup created by Evan You.',
+//   quote: "The hot reload is so fast it's near instant. - Evan You",
+//   hashtags: 'vuejs,vite,javascript',
+//   twitterUser: 'youyuxi',
+// });
 const networks = [
   //   {
   //     network: 'baidu',

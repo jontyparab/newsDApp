@@ -24,4 +24,5 @@ pnpm-debug.log*
 
 docs/_book
 
-.gitkeep
+test/
+res/

@@ -5,6 +5,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import videojs from 'video.js';
+import 'video.js/dist/video-js.css';
 
 const props = defineProps({
   options: {
@@ -16,12 +17,17 @@ const props = defineProps({
 });
 let player = ref(null);
 let videoPlayer = ref(null);
+
+defineExpose({
+  videoPlayer,
+});
+
 onMounted(() => {
   player.value = videojs(
     videoPlayer.value,
     props.options,
     function onPlayerReady() {
-      console.log('onPlayerReady', this);
+      console.log('onPlayerReady', videoPlayer.value);
     }
   );
 });
