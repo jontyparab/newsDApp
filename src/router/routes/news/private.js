@@ -1,23 +1,23 @@
-import NewsForm from "@/views/news-form.vue";
-import NewsList from "@/views/news-list.vue";
-import NewsDetail from "@/views/news-detail.vue";
+import NewsForm from '@/views/news-form.vue';
+import NewsOwnedList from '@/views/news-owned-list.vue';
 
 const routes = [
   {
-    path: "/news/create",
-    name: "NewsForm",
+    path: '/news/create',
+    name: 'NewsForm',
     component: NewsForm,
+    meta: {},
   },
   {
-    path: "/news/",
-    name: "NewsList",
-    component: NewsList,
-  },
-  {
-    path: "/news/:id",
-    name: "NewsDetail",
-    component: NewsDetail,
+    path: '/news/my',
+    name: 'NewsOwnedList',
+    component: NewsOwnedList,
+    meta: {},
   },
 ];
+
+routes.forEach((route) => {
+  route['meta']['requiresAuth'] = true;
+});
 
 export default routes;

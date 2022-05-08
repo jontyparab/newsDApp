@@ -1,3 +1,6 @@
+// Vendors
+@import 'vendors/formkit';
+
 // Abstracts
 @import 'abstracts/functions';
 @import 'abstracts/mixins';
@@ -20,13 +23,16 @@
 @import 'components/base-input-text';
 @import 'components/base-dialog';
 @import 'components/base-video';
+// home
+@import 'components/menu-bar';
+// news
+@import 'components/news-swiper';
 // other
-@import 'components/navigation-bar';
+@import 'components/the-navigation-bar';
 @import 'components/icon-button';
 @import 'components/text-verifier';
 @import 'components/share-panel';
-// news
-@import 'components/news-swiper';
+@import 'components/tiptap-editor';
 
 // Pages
 @import 'pages/home';

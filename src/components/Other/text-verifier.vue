@@ -5,12 +5,7 @@
       class="text-verifier__actual mb-sm"
     >
       <span class="text-verifier__value p-xs">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque aliquam
-        iure totam, qui commodi obcaecati. Neque facilis maxime quibusdam harum
-        amet? Dolor vitae unde at tempore molestiae quia dolores provident
-        asperiores pariatur, suscipit consequuntur, laudantium necessitatibus
-        repudiandae facilis, autem ducimus? Sequi id architecto aperiam animi
-        unde dicta ex. Ea, esse!
+        {{ trueValue }}
       </span>
       <icon-button
         title="Copy"
@@ -21,22 +16,43 @@
         @click="copyHash"
       ></icon-button>
     </div>
-    <div
-      v-if="fields.includes('verifyField')"
-      class="text-verifier__entered mb-sm"
-    >
-      <base-input-text
-        input-type="text"
-        :help-text="fieldMsg"
-        :color="currentState.color"
-        title="Paste from clipboard"
-        label="Enter Hash"
+    <div v-if="fields.includes('verifyField')" class="text-verifier__entered">
+      <FormKit
+        type="text"
+        name="hash_check"
+        help="Enter hash to verify"
+        placeholder="Enter hash"
+        outer-class="text-verifier__input-wrapper"
+        help-class="mt-xs"
+        :validation="[['required'], ['is', trueValue]]"
+        validation-visibility="live"
         @input="setCurrentState"
-      ></base-input-text>
+      >
+        <template #messages="{ node }">
+          <ul
+            v-if="node.value !== ''"
+            class="formkit-messages"
+            aria-live="polite"
+          >
+            <li
+              :class="{
+                'formkit-message': true,
+                'text-success': node.value === trueValue,
+              }"
+            >
+              <template v-if="node.value === trueValue">
+                HASH values matched.
+              </template>
+              <template v-else> HASH values did not match. </template>
+            </li>
+          </ul>
+        </template>
+      </FormKit>
       <icon-button
         class="text-verifier__status"
         :icon="currentState.icon"
         :animation="currentState.animation"
+        title="Paste from clipboard"
         :color="currentState.color"
         :size="0.9"
       ></icon-button>
@@ -46,7 +62,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import { toClipboard } from '@soerenmartius/vue3-clipboard';
+import { useClipboard } from '@vueuse/core';
 
 const props = defineProps({
   trueValue: {
@@ -63,11 +79,6 @@ const props = defineProps({
 });
 
 const verificationStates = {
-  loading: {
-    icon: 'refresh',
-    animation: 'rotate',
-    color: 'var(--color-grey-dark-2)',
-  },
   success: {
     icon: 'verified',
     animation: 'scale',
@@ -75,33 +86,25 @@ const verificationStates = {
   },
   error: {
     icon: 'error_outline',
-    animation: 'scale',
+    animation: '',
     color: 'var(--color-danger)',
   },
 };
 
-let currentState = ref(verificationStates.loading);
-let fieldMsg = ref('');
-const setCurrentState = (e) => {
-  const inputVal = e.target.value;
+let currentState = ref(verificationStates.error);
+const setCurrentState = (inputVal) => {
   const value = props.trueValue;
-  if (inputVal !== '') {
-    if (inputVal === value) {
-      currentState.value = verificationStates.success;
-      fieldMsg.value = 'HASH values matched.';
-    } else if (inputVal !== value) {
-      currentState.value = verificationStates.error;
-      fieldMsg.value = 'HASH values did not match.';
-    }
+  if (inputVal === value) {
+    currentState.value = verificationStates.success;
   } else {
-    currentState.value = verificationStates.loading;
-    fieldMsg.value = '';
+    currentState.value = verificationStates.error;
   }
 };
 
+const { copy } = useClipboard();
 async function copyHash() {
   try {
-    await toClipboard(props.trueValue);
+    copy(props.trueValue);
   } catch (e) {
     console.error(e);
   }

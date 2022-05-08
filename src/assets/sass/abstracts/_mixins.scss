@@ -40,7 +40,19 @@
 }
 
 @mixin stateUpdate {
-  @each $prop in ('danger', 'success', 'info', 'warning') {
+  @each $prop
+    in (
+      'primary',
+      'secondary',
+      'tertiary',
+      'danger',
+      'success',
+      'info',
+      'warning',
+      'white',
+      'black'
+    )
+  {
     .text-#{$prop} {
       color: var(--color-#{$prop}) !important;
     }
