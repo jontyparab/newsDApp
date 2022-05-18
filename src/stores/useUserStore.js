@@ -14,6 +14,7 @@ import {
   ability,
   // set
   abilityBuilder,
+  defineAbilitiesFor,
 } from '@/assets/js/services/ability.js';
 
 const auth = getAuth(fbApp);
@@ -24,18 +25,26 @@ const { can, cannot, rules } = abilityBuilder;
 export const useUserStore = defineStore('user', {
   state: () => {
     return {
+      /* For all users */
       userId: '',
       email: '',
-      fullName: '',
-      roles: {},
       bookmarks: {},
+
+      /* For journalists */
+      kycId: '',
+      isJournalist: false,
+      journalistId: '1',
+      isVerifiedJournalist: false,
+      firstName: '',
+      lastName: '',
+      about: '',
+      subjectsOfInterest: '',
+      verificationId: '',
+
       // app local data
       accessToken: '',
       // isMetaMaskConnected: false,
       // isAuthenticated: false,
-      isJournalist: false,
-      kycId: '',
-      isVerifiedJournalist: false,
       __typename: 'User',
     };
   },
@@ -88,7 +97,7 @@ export const useUserStore = defineStore('user', {
           .then((result) => {
             // Clear email from storage.
             console.log('Removed email from local storage.');
-            window.localStorage.removeItem('emailForSignIn');
+            // window.localStorage.removeItem('emailForSignIn');
 
             const {
               user: { accessToken, email, uid },
@@ -140,7 +149,9 @@ export const useUserStore = defineStore('user', {
             localStorage.removeItem('tokenExpiration');
             clearTimeout(timer);
 
-            ability.update([]);
+            // permissions
+            const { rules: r } = defineAbilitiesFor('anyone');
+            ability.update(r);
 
             if (redirect) {
               router.push({ name: 'AuthForm' });
@@ -185,35 +196,75 @@ export const useUserStore = defineStore('user', {
         this.$patch({
           ...data.data,
         });
+
+        // permissions
         can('authenticated');
-        if (this.isJournalist) {
+
+        if (this.isJournalist && this.isVerifiedJournalist) {
+          console.log('ran getorcreate');
           can('manage', 'News');
         }
         ability.update(rules);
+
+        // setTimeout(() => {
+        //   can('manage', 'News');
+        //   ability.update(rules);
+        // }, 4000);
+
         // router.push({ name: 'NewsList' });
       } catch (error) {
         console.error('Error getOrCreateUser: ', error);
       }
     },
 
-    async registerJournalist(kycInfo) {
-      console.log(kycInfo);
-      // TODO: this should be done from admin panel
-      kycInfo.verificationId = Date.getTime();
+    async getWalletAccounts() {
       try {
-        let kycData = await fbAxios.post(`/kyc/${this.userId}/.json`, kycInfo);
-        let updatedUserData = await fbAxios.patch(
+        const accounts = await window.ethereum.request({
+          method: 'eth_requestAccounts',
+        });
+        if (accounts.length > 0) {
+          can('connected', 'Wallet');
+          ability.update(rules);
+        }
+        return accounts;
+      } catch (e) {
+        console.log('Error getWalletAccounts: ');
+      }
+    },
+
+    async registerJournalist(formData) {
+      // TODO: this should be done from admin panel
+      formData.verificationId = crypto.randomUUID();
+      const { about, subjectsOfInterest, ...kycData } = formData;
+      try {
+        let { data: resData } = await fbAxios.put(
+          `/kyc/${this.userId}/.json`,
+          kycData
+        );
+        let { data: updatedUserData } = await fbAxios.patch(
           `/users/${this.userId}/.json`,
           {
-            kycId: kycData.id,
+            firstName: resData.firstName,
+            lastName: resData.lastName,
+            about,
+            subjectsOfInterest,
+            isJournalist: true,
             isVerifiedJournalist: true,
+            verificationId: resData.verificationId,
           }
         );
-        this.isVerifiedJournalist = updatedUserData?.true;
+        this.$patch(updatedUserData);
+        // permissions
+        if (this.isJournalist && this.isVerifiedJournalist) {
+          can('manage', 'News');
+          ability.update(rules);
+        }
       } catch (e) {
         console.log('Error registerJournalist:');
       }
     },
   },
-  getters: {},
+  getters: {
+    getFullName: (state) => `${state.firstName} ${state.lastName}`,
+  },
 });

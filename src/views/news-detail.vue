@@ -3,7 +3,7 @@
     <div class="news-detail">
       <div class="news-detail__figure">
         <img
-          :src="news.imageUrl"
+          :src="news.imageUrl || 'https://picsum.photos/id/1015/600/400'"
           :alt="news.headline"
           class="news-detail__image"
         />
@@ -49,7 +49,7 @@
         <div class="news-detail__info px-sm">
           <div class="news-detail__info--1 mb-xs">
             <p>{{ formatNewsDate(news.date) }}</p>
-            <p class="ms-xs">
+            <p class="">
               - By
               <b>
                 <u>{{ news.author }}</u>
@@ -73,11 +73,7 @@
         <h1 class="news-detail__title my-sm px-xs">
           {{ news.headline }}
         </h1>
-        <div class="news-detail__text mt-sm">
-          <p class="news-detail__text--para">
-            {{ news.content }}
-          </p>
-        </div>
+        <div class="news-detail__text mt-sm" v-html="news.content"></div>
       </div>
     </div>
     <share-panel
@@ -102,7 +98,7 @@
 
 <script setup>
 import { storeToRefs } from 'pinia';
-import { ref, reactive, toRefs, computed } from 'vue';
+import { reactive, toRefs, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useNewsStore } from '../stores/useNewsStore';
 import { formatNewsDate } from '@/assets/js/utils/formatters';
@@ -110,8 +106,7 @@ import { formatNewsDate } from '@/assets/js/utils/formatters';
 const router = useRouter();
 
 const newsStore = useNewsStore();
-const { toggleBookmark } = newsStore;
-const { getNewsById } = storeToRefs(newsStore);
+const { toggleBookmark, fetchNewsById } = newsStore;
 
 const props = defineProps({
   id: {
@@ -119,7 +114,6 @@ const props = defineProps({
     required: true,
   },
 });
-const { id } = toRefs(props);
 
 // managing dialogs
 const dialogs = reactive({
@@ -133,22 +127,31 @@ const closeDialog = (name) => {
   dialogs[name] = false;
 };
 
-const news = getNewsById.value(id.value);
+const news = reactive({});
 
 // web share feature
 const currentPath = router.currentRoute.value.path;
 const currentUrl = new URL(currentPath, location.origin).href;
-const sharing = {
-  url: currentUrl,
-  title: news.headline,
-  description: news.lead,
-  // quote: "The hot reload is so fast it's near instant. - Evan You",
-  // hashtags: 'vuejs,vite,javascript',
-  // twitterUser: 'youyuxi',
-};
+const sharing = computed(() => {
+  return {
+    url: currentUrl,
+    title: news.headline,
+    description: news.lead,
+    // quote: "The hot reload is so fast it's near instant. - Evan You",
+    // hashtags: 'vuejs,vite,javascript',
+    // twitterUser: 'youyuxi',}
+  };
+});
 
 // icon-button actions
 const goBack = () => {
   router.back();
 };
+
+onMounted(async () => {
+  const temp = await fetchNewsById(props.id);
+  Object.assign(news, temp);
+  // you can show a spinner on v-if="dataReady" and set it to true after fetching.
+  // https://stackoverflow.com/questions/53513538/is-async-await-available-in-vue-js-mounted
+});
 </script>

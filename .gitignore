@@ -25,3 +25,4 @@ pnpm-debug.log*
 docs/_book
 
 test/
+res/
