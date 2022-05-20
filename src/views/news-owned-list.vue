@@ -18,7 +18,7 @@
             class="news-owned-list__tab"
             data-tab="owned"
           >
-            Owned Stakes
+            Owned
           </h2>
           <h2
             :class="{ 'is-active': currTab === 'bookmarks' }"

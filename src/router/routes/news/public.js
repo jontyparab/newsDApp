@@ -6,7 +6,11 @@ const routes = [
     path: '/news/:id',
     name: 'NewsDetail',
     component: NewsDetail,
-    props: true,
+    props: (route) => {
+      return {
+        id: Number(route.params.id),
+      };
+    },
   },
   {
     path: '/news/',

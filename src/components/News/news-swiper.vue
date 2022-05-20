@@ -24,10 +24,10 @@
             />
             <div class="news-swiper__overlay" role="presentation"></div>
             <div class="news-swiper__info">
-              <div class="news-swiper__info--time px-sm">
+              <div class="news-swiper__info--time pt-xs px-sm">
                 {{ formatNewsDate(news.date) }}
               </div>
-              <icon-button
+              <!-- <icon-button
                 class="ms-auto"
                 :icon="news.isBookmarked ? 'bookmark' : 'bookmark_border'"
                 :size="1"
@@ -38,7 +38,7 @@
                 "
                 title="Save"
                 @click.prevent="toggleBookmark(news.id, news.isBookmarked)"
-              ></icon-button>
+              ></icon-button> -->
             </div>
             <h2 class="news-swiper__title px-sm">
               {{ news.headline }}
@@ -54,11 +54,11 @@
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Pagination, Autoplay } from 'swiper';
 import { formatNewsDate } from '@/assets/js/utils/formatters';
-import { useNewsStore } from '@/stores/useNewsStore';
+// import { useNewsStore } from '@/stores/useNewsStore';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-const { toggleBookmark } = useNewsStore();
+// const { toggleBookmark } = useNewsStore();
 
 const props = defineProps({
   newsList: {

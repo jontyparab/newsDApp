@@ -39,7 +39,7 @@
     "video.js": "^7.17.0",
     "vue": "^3.2.25",
     "vue-dragscroll": "^3.0.1",
-    "vue-router": "^4.0.0-0",
+    "vue-router": "^4.0.13",
     "vue-social-sharing": "^4.0.0-alpha4",
     "web3": "^1.7.0"
   },

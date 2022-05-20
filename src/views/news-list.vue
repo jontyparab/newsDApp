@@ -6,7 +6,7 @@
       <template v-for="news in newsList" :key="news.id">
         <router-link
           v-slot="{ navigate }"
-          :to="{ name: 'NewsDetail', params: { id: news.id } }"
+          :to="{ name: 'NewsDetail', params: { id: Number(news.id) } }"
           custom
         >
           <news-list-item
@@ -15,7 +15,6 @@
             :headline="news.headline"
             :lead="news.lead"
             :date="news.date"
-            :is-bookmarked="news.isBookmarked"
             @click="navigate"
           ></news-list-item>
         </router-link>
