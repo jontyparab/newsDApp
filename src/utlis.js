@@ -2,7 +2,9 @@ import { ethers } from "ethers";
 import { addressConstant } from "./abi/address";
 import PONC from "./abi/PONC.json";
 
-export const registerJournalist = async (signer, verification_id) => {
+export const registerJournalist = async (verification_id) => {
+  const provider = new ethers.providers.Web3Provider(window.ethereum)
+  const signer = await provider.getSigner()
   const contractInstance = new ethers.Contract(
     addressConstant.POCN,
     PONC.abi,
@@ -14,7 +16,9 @@ export const registerJournalist = async (signer, verification_id) => {
   console.log("response", res);
 };
 
-export const publishNews = async (signer, newsUri, journalistId, price) => {
+export const publishNews = async (newsUri, journalistId, price) => {
+  const provider = new ethers.providers.Web3Provider(window.ethereum)
+  const signer = await provider.getSigner()
   const contractInstance = new ethers.Contract(
     addressConstant.POCN,
     PONC.abi,

@@ -5,7 +5,7 @@
       class="text-verifier__actual mb-sm"
     >
       <span class="text-verifier__value p-xs">
-        {{ trueValue }}
+        {{ finalTrueVal }}
       </span>
       <icon-button
         title="Copy"
@@ -20,11 +20,12 @@
       <FormKit
         type="text"
         name="hash_check"
+        :value="finalTrueVal"
         help="Enter hash to verify"
         placeholder="Enter hash"
         outer-class="text-verifier__input-wrapper"
         help-class="mt-xs"
-        :validation="[['required'], ['is', trueValue]]"
+        :validation="[['required'], ['is', finalTrueVal]]"
         validation-visibility="live"
         @input="setCurrentState"
       >
@@ -37,10 +38,10 @@
             <li
               :class="{
                 'formkit-message': true,
-                'text-success': node.value === trueValue,
+                'text-success': node.value === finalTrueVal,
               }"
             >
-              <template v-if="node.value === trueValue">
+              <template v-if="node.value === finalTrueVal">
                 HASH values matched.
               </template>
               <template v-else> HASH values did not match. </template>
@@ -61,12 +62,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useClipboard } from '@vueuse/core';
 
 const props = defineProps({
   trueValue: {
-    type: String,
+    type: [Number, String],
     required: true,
   },
   fields: {
@@ -91,20 +92,23 @@ const verificationStates = {
   },
 };
 
-let currentState = ref(verificationStates.error);
+let currentState = ref(verificationStates.success);
 const setCurrentState = (inputVal) => {
-  const value = props.trueValue;
-  if (inputVal === value) {
+  if (inputVal === finalTrueVal.value) {
     currentState.value = verificationStates.success;
   } else {
     currentState.value = verificationStates.error;
   }
 };
 
+const finalTrueVal = computed(() => {
+  return props.trueValue.toString();
+});
+
 const { copy } = useClipboard();
 async function copyHash() {
   try {
-    copy(props.trueValue);
+    copy(finalTrueVal.value);
   } catch (e) {
     console.error(e);
   }

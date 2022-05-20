@@ -16,6 +16,8 @@ import {
   abilityBuilder,
   defineAbilitiesFor,
 } from '@/assets/js/services/ability.js';
+import { registerJournalist } from '@/assets/js/utils/contractUtils';
+import { randomIntUUID } from '@/assets/js/utils/cryptoUtils';
 
 const auth = getAuth(fbApp);
 let timer = null;
@@ -33,13 +35,13 @@ export const useUserStore = defineStore('user', {
       /* For journalists */
       kycId: '',
       isJournalist: false,
-      journalistId: '1',
+      journalistId: null,
       isVerifiedJournalist: false,
       firstName: '',
       lastName: '',
       about: '',
       subjectsOfInterest: '',
-      verificationId: '',
+      verificationId: null,
 
       // app local data
       accessToken: '',
@@ -94,22 +96,30 @@ export const useUserStore = defineStore('user', {
         }
         // The client SDK will parse the code from the link for you.
         signInWithEmailLink(auth, emailForSignIn, window.location.href)
-          .then((result) => {
+          .then(async (result) => {
             // Clear email from storage.
             console.log('Removed email from local storage.');
             // window.localStorage.removeItem('emailForSignIn');
-
             const {
-              user: { accessToken, email, uid },
-              _tokenResponse,
+              user: { email, uid },
+              _tokenResponse: { refreshToken },
             } = result;
+
+            // Getting more validity token using refresh token
+            const {
+              data: { expires_in, id_token: accessToken },
+            } = await fbAxios.post(
+              `https://securetoken.googleapis.com/v1/token`,
+              { refresh_token: refreshToken, grant_type: 'refresh_token' }
+            );
+
             this.$patch({
               userId: uid,
               accessToken,
             });
 
             /* Auto login setup */
-            const expiresIn = +_tokenResponse.expiresIn * 1000;
+            const expiresIn = +expires_in * 1000;
             // const expiresIn = 30;
             const tokenExpiration = new Date().getTime() + expiresIn;
 
@@ -175,9 +185,9 @@ export const useUserStore = defineStore('user', {
           return;
         }
 
-        timer = setTimeout(() => {
-          this.logout(true);
-        }, expiresIn);
+        // timer = setTimeout(() => {
+        //   this.logout(true);
+        // }, expiresIn);
 
         if (accessToken && userId) {
           this.$patch({ accessToken, userId });
@@ -201,7 +211,6 @@ export const useUserStore = defineStore('user', {
         can('authenticated');
 
         if (this.isJournalist && this.isVerifiedJournalist) {
-          console.log('ran getorcreate');
           can('manage', 'News');
         }
         ability.update(rules);
@@ -228,13 +237,14 @@ export const useUserStore = defineStore('user', {
         }
         return accounts;
       } catch (e) {
-        console.log('Error getWalletAccounts: ');
+        console.error('Error getWalletAccounts: ', e);
       }
     },
 
     async registerJournalist(formData) {
       // TODO: this should be done from admin panel
-      formData.verificationId = crypto.randomUUID();
+      // formData.verificationId = crypto.randomUUID();
+      formData.verificationId = randomIntUUID();
       const { about, subjectsOfInterest, ...kycData } = formData;
       try {
         let { data: resData } = await fbAxios.put(
@@ -253,18 +263,42 @@ export const useUserStore = defineStore('user', {
             verificationId: resData.verificationId,
           }
         );
-        this.$patch(updatedUserData);
+        this.$patch({ ...updatedUserData });
+
+        const {
+          verification_id: { _hex },
+        } = await registerJournalist(updatedUserData.verificationId);
+        // TODO: save journalist id  in firebase and patch local state
+        let { data: journalistId } = await fbAxios.patch(
+          `/users/${this.userId}/.json`,
+          {
+            journalistId: parseInt(_hex),
+          }
+        );
+        this.$patch({ ...journalistId });
+
         // permissions
         if (this.isJournalist && this.isVerifiedJournalist) {
           can('manage', 'News');
           ability.update(rules);
         }
       } catch (e) {
-        console.log('Error registerJournalist:');
+        console.error('Error registerJournalist:', e);
       }
     },
   },
   getters: {
     getFullName: (state) => `${state.firstName} ${state.lastName}`,
+    getBookmarkStatus(state) {
+      return (id) => {
+        if (state?.bookmarks) {
+          try {
+            Boolean(state?.bookmarks[id]);
+          } catch (e) {
+            console.log('No property on bookmarks.');
+          }
+        }
+      };
+    },
   },
 });

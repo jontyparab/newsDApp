@@ -26,6 +26,13 @@
             @click="openDialog('textVerifier')"
           ></icon-button>
           <icon-button
+            icon="coins-line"
+            class="ms-sm"
+            :size="1"
+            color="var(--color-white)"
+            title="Purchase"
+          ></icon-button>
+          <icon-button
             icon="share"
             class="ms-sm"
             :size="1"
@@ -34,6 +41,7 @@
             @click="openDialog('sharePanel')"
           ></icon-button>
           <icon-button
+            v-if="can('authenticated')"
             :icon="news.isBookmarked ? 'bookmark' : 'bookmark_border'"
             class="ms-sm"
             :size="1"
@@ -43,7 +51,7 @@
                 : 'var(--color-white)'
             "
             title="Bookmark"
-            @click="toggleBookmark(news.id, news.isBookmarked)"
+            @click="updateBookmark"
           ></icon-button>
         </div>
         <div class="news-detail__info px-sm">
@@ -102,18 +110,26 @@ import { reactive, toRefs, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useNewsStore } from '../stores/useNewsStore';
 import { formatNewsDate } from '@/assets/js/utils/formatters';
+import { useUserStore } from '../stores/useUserStore';
+import { useAbility } from '@/assets/js/services/ability.js';
 
 const router = useRouter();
 
+const userStore = useUserStore();
+const { getBookmarkStatus } = userStore;
 const newsStore = useNewsStore();
 const { toggleBookmark, fetchNewsById } = newsStore;
 
 const props = defineProps({
   id: {
-    type: String,
+    type: Number,
     required: true,
   },
 });
+
+const { id } = toRefs(props);
+
+const { can, cannot } = useAbility();
 
 // managing dialogs
 const dialogs = reactive({
@@ -148,9 +164,17 @@ const goBack = () => {
   router.back();
 };
 
+// update bookmark icon
+const updateBookmark = () => {
+  toggleBookmark(news.id, news.isBookmarked);
+  news.isBookmarked = !news.isBookmarked;
+};
+
 onMounted(async () => {
-  const temp = await fetchNewsById(props.id);
-  Object.assign(news, temp);
+  const temp = await fetchNewsById(id.value);
+  const isBookmarked = getBookmarkStatus(id.value);
+  Object.assign(news, { ...temp, isBookmarked });
+  console.log(news);
   // you can show a spinner on v-if="dataReady" and set it to true after fetching.
   // https://stackoverflow.com/questions/53513538/is-async-await-available-in-vue-js-mounted
 });

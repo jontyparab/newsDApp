@@ -4,14 +4,15 @@
 </template>
 
 <script setup>
-import { watchEffect } from 'vue';
+import { watchEffect, watch } from 'vue';
 import { useUserStore } from '@/stores/useUserStore';
 import { useNewsStore } from '@/stores/useNewsStore';
 
 const userStore = useUserStore();
 const newsStore = useNewsStore();
+userStore.tryLogin();
+
 watchEffect(() => {
-  userStore.tryLogin();
-  newsStore.fetchNewsList();
+  newsStore.fetchNewsList('all');
 });
 </script>

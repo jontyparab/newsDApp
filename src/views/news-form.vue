@@ -30,7 +30,7 @@ import { useMainStore } from '@/stores/useMainStore';
 const newsStore = useNewsStore();
 const mainStore = useMainStore();
 const { createNews } = newsStore;
-const { uploadIpfsFile } = mainStore;
+const { uploadIpfsFile, uploadFbFile } = mainStore;
 
 const editor = createInput(TiptapEditor, {
   props: ['limit', 'placeholder'],
@@ -84,6 +84,21 @@ const schema = [
     label: 'Conclusion',
     help: '(Optional)',
   },
+  {
+    $formkit: 'checkbox',
+    name: 'saleable',
+    id: 'id_saleable',
+    label: 'Allow sale',
+    help: 'Allow other users to purchase rights.',
+  },
+  {
+    $formkit: 'number',
+    if: '$get(id_saleable).value',
+    name: 'price',
+    validation: [['required'], ['min', 0]],
+    label: 'Price',
+    help: 'Enter the price for which it should be sold.',
+  },
 ];
 
 let newsForm;
@@ -93,7 +108,7 @@ const setNode = (n) => {
 
 async function submitForm() {
   if (confirm('You are about to publish the article. Continue?')) {
-    const imageUrls = await uploadIpfsFile(newsForm.value.image, '/images');
+    const imageUrls = await uploadFbFile(newsForm.value.image, '/images');
     // eslint-disable-next-line no-unused-vars
     const requiredData = (({ image, ...o }) => {
       return { ...o, imageUrl: imageUrls[0] };
