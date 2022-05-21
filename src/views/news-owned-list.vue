@@ -13,13 +13,13 @@
           >
             Authored
           </h2>
-          <h2
+          <!-- <h2
             :class="{ 'is-active': currTab === 'owned' }"
             class="news-owned-list__tab"
             data-tab="owned"
           >
             Owned
-          </h2>
+          </h2> -->
           <h2
             :class="{ 'is-active': currTab === 'bookmarks' }"
             class="news-owned-list__tab"
@@ -30,16 +30,23 @@
         </div>
       </div>
       <div class="news__list">
-        <news-list-item
-          v-for="news in dynamicList"
-          :id="news.id"
-          :key="news.id"
-          :image-url="news.imageUrl"
-          :headline="news.headline"
-          :lead="news.lead"
-          :date="news.date"
-          :is-bookmarked="news.isBookmarked"
-        ></news-list-item>
+        <template v-for="news in setList" :key="news.id">
+          <router-link
+            v-slot="{ navigate }"
+            :to="{ name: 'NewsDetail', params: { id: Number(news.id) } }"
+            custom
+          >
+            <news-list-item
+              :id="news.id"
+              :key="news.id"
+              :image-url="news.imageUrl"
+              :headline="news.headline"
+              :lead="news.lead"
+              :date="news.date"
+              @click="navigate"
+            ></news-list-item>
+          </router-link>
+        </template>
       </div>
     </div>
   </div>
@@ -48,20 +55,31 @@
 <script setup>
 import { useNewsStore } from '@/stores/useNewsStore';
 import { storeToRefs } from 'pinia';
-import { reactive, ref } from 'vue';
+import { ref, computed } from 'vue';
 
 const newsStore = useNewsStore();
-
-const dynamicList = reactive([]);
-
+const { newsList, authoredNewsList, ownedNewsList, bookmarkedNewsList } =
+  storeToRefs(newsStore);
 const currTab = ref('authored');
 const setTab = (e) => {
   // event delegation
-  const n = e.target.dataset.tab;
-  if (n) {
+  if (e.target.classList.contains('news-owned-list__tab')) {
+    const n = e.target.dataset.tab;
     currTab.value = n;
   }
-  // TODO: change list based on clicks
-  console.log(dynamicList.value);
 };
+
+const setList = computed(() => {
+  if (currTab.value === 'authored') {
+    return authoredNewsList.value;
+  }
+  // else if (currTab.value === 'owned') {
+  //   return ownedNewsList.value;
+  // }
+  else if (currTab.value === 'bookmarks') {
+    return bookmarkedNewsList.value;
+  } else {
+    return newsList.value;
+  }
+});
 </script>

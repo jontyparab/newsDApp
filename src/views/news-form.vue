@@ -22,11 +22,13 @@
 import { FormKitSchema, createInput } from '@formkit/vue';
 import TiptapEditor from '../components/Other/tiptap-editor.vue';
 import { markRaw } from 'vue';
+import { useRouter } from 'vue-router';
 import { useNewsStore } from '@/stores/useNewsStore';
 import { useMainStore } from '@/stores/useMainStore';
 // import TinymceEditor from '../components/Other/tinymce-editor.vue';
 // headline, $author, $date, $id, image, lead paragraph, content(rich text), conclusion,
 
+const router = useRouter();
 const newsStore = useNewsStore();
 const mainStore = useMainStore();
 const { createNews } = newsStore;
@@ -114,6 +116,7 @@ async function submitForm() {
       return { ...o, imageUrl: imageUrls[0] };
     })(newsForm.value);
     await createNews(requiredData);
+    router.push({ name: 'NewsList' });
   } else {
     console.log(newsForm.value);
   }
