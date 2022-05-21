@@ -1,9 +1,9 @@
 <template>
   <div class="container">
-    <div class="news-detail">
+    <div v-if="news" class="news-detail">
       <div class="news-detail__figure">
         <img
-          :src="news.imageUrl || 'https://picsum.photos/id/1015/600/400'"
+          :src="news.imageUrl"
           :alt="news.headline"
           class="news-detail__image"
         />
@@ -26,6 +26,7 @@
             @click="openDialog('textVerifier')"
           ></icon-button>
           <icon-button
+            v-if="can('authenticated')"
             icon="coins-line"
             class="ms-sm"
             :size="1"
@@ -119,6 +120,7 @@ const userStore = useUserStore();
 const { getBookmarkStatus } = userStore;
 const newsStore = useNewsStore();
 const { toggleBookmark, fetchNewsById } = newsStore;
+const { getNewsById } = storeToRefs(newsStore);
 
 const props = defineProps({
   id: {
@@ -143,16 +145,14 @@ const closeDialog = (name) => {
   dialogs[name] = false;
 };
 
-const news = reactive({});
-
 // web share feature
 const currentPath = router.currentRoute.value.path;
 const currentUrl = new URL(currentPath, location.origin).href;
 const sharing = computed(() => {
   return {
     url: currentUrl,
-    title: news.headline,
-    description: news.lead,
+    title: news.value.headline,
+    description: news.value.lead,
     // quote: "The hot reload is so fast it's near instant. - Evan You",
     // hashtags: 'vuejs,vite,javascript',
     // twitterUser: 'youyuxi',}
@@ -166,15 +166,15 @@ const goBack = () => {
 
 // update bookmark icon
 const updateBookmark = () => {
-  toggleBookmark(news.id, news.isBookmarked);
-  news.isBookmarked = !news.isBookmarked;
+  toggleBookmark(news.value);
+  // this.news.isBookmarked = !this.news.isBookmarked;
 };
 
+const news = computed(() => {
+  return getNewsById.value(id.value);
+});
+
 onMounted(async () => {
-  const temp = await fetchNewsById(id.value);
-  const isBookmarked = getBookmarkStatus(id.value);
-  Object.assign(news, { ...temp, isBookmarked });
-  console.log(news);
   // you can show a spinner on v-if="dataReady" and set it to true after fetching.
   // https://stackoverflow.com/questions/53513538/is-async-await-available-in-vue-js-mounted
 });

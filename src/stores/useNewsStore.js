@@ -20,7 +20,7 @@ export const useNewsStore = defineStore('news', {
       // ],
       newsList: [
         // {
-        //   id: 'sfexce234fsf',
+        //   id: 123,
         //   imageUrl: 'https://picsum.photos/id/1015/600/400',
         //   headline: 'Test headline',
         //   lead: 'Test lead',
@@ -33,7 +33,7 @@ export const useNewsStore = defineStore('news', {
         //   __typename: 'News',
         // },
         // {
-        //   id: 'vsdf32490ssd',
+        //   id: 456,
         //   imageUrl: 'https://picsum.photos/id/1015/600/400',
         //   headline: 'Test headline',
         //   lead: 'Test lead',
@@ -53,32 +53,31 @@ export const useNewsStore = defineStore('news', {
   },
 
   actions: {
-    async toggleBookmark(id, isBookmarked) {
+    async toggleBookmark(news) {
       const userStore = useUserStore();
-      // const news = this.fetchNewsById(id);
       // await createMarketSale();
       try {
-        if (isBookmarked) {
+        if (news.isBookmarked) {
           const deletedBookmark = await fbAxios.delete(
-            `/users/${userStore.userId}/bookmarks.json`,
-            {
-              equalTo: id,
-            }
+            `/users/${userStore.userId}/bookmarks/${news.id}.json`
           );
+          news.isBookmarked = false;
           console.log(deletedBookmark);
         } else {
           const data = await fbAxios.put(
-            `/users/${userStore.userId}/bookmarks/${id}.json`,
+            `/users/${userStore.userId}/bookmarks/${news.id}.json`,
             {
               bookmarkedOn: new Date().toISOString(),
             }
           );
+          news.isBookmarked = true;
           console.log(data);
         }
         const { data: bookmarks } = await fbAxios.get(
           `/users/${userStore.userId}/bookmarks.json`
         );
         userStore.$patch({ bookmarks });
+        await this.fetchNewsList('bookmarked');
       } catch (error) {
         console.error('Error bookmarking: ', error);
       }
@@ -102,9 +101,10 @@ export const useNewsStore = defineStore('news', {
         );
         await publishNews(
           res.data.url_link,
-          userStore.journalistId,
+          userStore.verificationId,
           news.price || 0
         );
+        this.fetchNewsList('all');
         return res.data.url_link;
       } catch (error) {
         console.error('Error createNews: ', error);
@@ -120,7 +120,8 @@ export const useNewsStore = defineStore('news', {
           // Note: The parentheses ( ... ) around the assignment statement are required when using object literal destructuring assignment without a declaration.
           ({ data: news } = await nodeAxios.get(url));
           Object.assign(news, { id });
-          this.newsList.push(news);
+          this.newsList.unshift(news);
+          this.sortNewsList(this.newsList);
         }
         return news;
       } catch (error) {
@@ -136,30 +137,34 @@ export const useNewsStore = defineStore('news', {
         switch (type) {
           case 'all':
             tempData = await fetchAllPublishedNews(); // get all news urls list
-            break;
+            return this.updateNewsList(tempData, this.newsList);
           case 'authored':
             tempData = await fetchMyNews(); // get my news urls list
-            break;
+            return this.updateNewsList(tempData, this.authoredNewsList);
           case 'owned':
             tempData = await fetchMyNews(); // get owned news urls list
-            break;
-          case 'bookmarked':
-            async () => {
-              console.log(userStore.bookmarks);
-              // fetchNewsById i guess
-              return [];
-            };
-            break;
+            return this.updateNewsList(tempData, this.ownedNewsList);
+          case 'bookmarked': {
+            this.bookmarkedNewsList.length = 0;
+            const keys = Object.keys(userStore.bookmarks);
+            tempData = this.newsList.filter((n) => {
+              console.log('ME', keys.includes(String(n.id)));
+              if (keys.includes(String(n.id))) return true;
+              else return false;
+            });
+            Object.assign(this.bookmarkedNewsList, tempData);
+            return tempData;
+          }
           default:
             break;
         }
-        this.updateNewsList(tempData, this.newsList);
       } catch (error) {
         console.error(`Error fetchNewsList(${type}): `, error);
       }
     },
 
     async updateNewsList(resArr, list) {
+      const userStore = useUserStore();
       // Parsing
       const objs = await Promise.all(
         resArr.map(async (r) => {
@@ -180,9 +185,20 @@ export const useNewsStore = defineStore('news', {
             return { ...data, id, uri };
           })
       );
+      this.sortNewsList(newsList);
+      const keys = Object.keys(userStore.bookmarks);
+      newsList.forEach((n) => {
+        if (keys.includes(String(n.id))) n.isBookmarked = true;
+        else n.isBookmarked = false;
+      });
       list.length = 0;
       Object.assign(list, newsList);
       console.log(list);
+      return list;
+    },
+
+    sortNewsList(nl) {
+      nl.sort((a, b) => -a.date.localeCompare(b.date));
     },
 
     // async fetchNewsUrlById(id) {
