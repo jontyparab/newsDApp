@@ -1,11 +1,14 @@
 import { Ability, AbilityBuilder, defineAbility } from '@casl/ability';
 import { useAbility } from '@casl/vue';
 
-/*
-CASL uses can and cannot function names to both define and check permissions. For some of you, it may look confusing and you would like to be more explicit and not rely on the execution context.
-*/
+/**
+ * CASL uses can and cannot function names to both define and check permissions.
+ * For some of you, it may look confusing and you would like to be more explicit
+ * and not rely on the execution context.
+ * @module ability
+ */
 
-// these are RBAC.
+// These are RBAC.
 // Others like if wallet connected or not can be handled using ABAC.
 // Only use defineAbilitiesFor when you don't have any UI specific temporary
 // permissions set example ('connected', 'Wallet').
