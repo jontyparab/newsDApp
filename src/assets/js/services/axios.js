@@ -1,13 +1,15 @@
 import axios from 'axios';
 import { firebaseConfig } from './firebase';
 
-/*
-Note: 
-A collection has multiple documents. 
-A document can have fields (JSON properties) and/or collections.
-A collection cannot have *direct* child collection. 
-A document cannot have a *direct* child document.
-*/
+/**
+ * Base axios module
+ * A collection has multiple documents.
+ * A document can have fields (JSON properties) and/or collections.
+ * A collection cannot have *direct* child collection.
+ * A document cannot have a *direct* child document.
+ * @module axios
+ */
+
 // export default axios.create({
 //   baseURL: `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/`,
 //   headers: {
@@ -17,6 +19,7 @@ A document cannot have a *direct* child document.
 //     key: firebaseConfig.apiKey,
 //   },
 // });
+
 export const fbAxios = axios.create({
   baseURL: `https://news-dapp-default-rtdb.firebaseio.com/`,
   headers: {

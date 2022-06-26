@@ -7,7 +7,8 @@
     "preview": "vite preview",
     "test": "vitest",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src",
-    "format": "prettier .  --write"
+    "format": "prettier .  --write",
+    "doc": "jsdoc -c jsdoc.json"
   },
   "dependencies": {
     "@casl/ability": "^5.4.3",
@@ -52,6 +53,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-vue": "^8.4.1",
     "happy-dom": "^2.31.1",
+    "jsdoc": "^3.6.10",
     "sass": "^1.42.1",
     "unplugin-vue-components": "^0.17.18",
     "vite": "^2.7.2",
